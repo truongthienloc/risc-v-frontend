@@ -8,9 +8,13 @@ import type {AppPropsWithLayout} from '~/interfaces/app'
 import Head from 'next/head'
 import DefaultLayout from '~/layouts/DefaultLayout'
 import {ToastContainer} from 'react-toastify'
-import { useEffect } from 'react'
+import {useEffect} from 'react'
+import {wrapper} from '~/services/redux'
+import {PersistGate} from 'redux-persist/integration/react'
+import {useStore} from 'react-redux'
 
-export default function App({Component, pageProps}: AppPropsWithLayout) {
+function App({Component, pageProps}: AppPropsWithLayout) {
+	const store: any = useStore()
 	const getLayout =
 		Component.getLayout ?? ((page) => <DefaultLayout>{page}</DefaultLayout>)
 
@@ -18,9 +22,9 @@ export default function App({Component, pageProps}: AppPropsWithLayout) {
 		if (window) {
 			import('codemirror/addon/mode/simple')
 		}
-	}, []);
+	}, [])
 	return getLayout(
-		<>
+		<PersistGate persistor={store.__persistor} loading={<div>Loading</div>}>
 			<Head>
 				<title>RISC-V</title>
 				<meta charSet='utf-8' />
@@ -37,6 +41,8 @@ export default function App({Component, pageProps}: AppPropsWithLayout) {
 				draggable
 				theme='light'
 			/>
-		</>
+		</PersistGate>
 	)
 }
+
+export default wrapper.withRedux(App)

@@ -7,8 +7,7 @@ import {
 	DisplayRegisterTable,
 } from '~/components/DisplayDataTable'
 import CodeEditor from '~/components/CodeEditor'
-// import CodeMirror from '@uiw/react-codemirror'
-// import '@uiw/react-codemirror'
+import client from '~/services/axios'
 
 const largeData = [
 	{name: 'x0', value: '0x0000f020'},
@@ -31,12 +30,21 @@ const largeData = [
 
 function CodingPage() {
 	const [tabIndex, setTabIndex] = useState(0)
-	const [code, setCode] = useState('');
+	const [code, setCode] = useState('')
 	const handleChangeTabIndex = (event: React.SyntheticEvent, index: number) => {
 		setTabIndex(index)
 	}
 
-	const handleChangeCode = (value: string) => setCode(value);
+	const handleChangeCode = (value: string) => setCode(value)
+
+	const handleRun = async () => {
+		try {
+			console.log('Click')
+			// const res = await client.post('/assembler', {code: code})
+			const res = await client.post('/assembler', {code: code})
+			console.log('res: ', res)
+		} catch (error) {}
+	}
 
 	return (
 		<div className='max-h-screen flex-1 w-full flex flex-col gap-4 px-4 p-1'>
@@ -51,7 +59,7 @@ function CodingPage() {
 						<h2 className='text-xl text-center'>CODE EDITOR</h2>
 					</div>
 					<div className='flex flex-col h-full border border-black'>
-						<CodeEditor value={code} onChange={handleChangeCode}/>
+						<CodeEditor value={code} onChange={handleChangeCode} />
 					</div>
 				</div>
 				<div className='flex-[1] flex flex-col gap-1'>
@@ -81,7 +89,9 @@ function CodingPage() {
 			</div>
 
 			<div className='flex flex-row gap-2'>
-				<Button variant='outlined'>RUN</Button>
+				<Button variant='outlined' onClick={handleRun}>
+					RUN
+				</Button>
 				<Button variant='outlined'>RESET</Button>
 				<Button variant='outlined'>STEP</Button>
 			</div>

@@ -7,11 +7,11 @@ import {
 	TableRow,
 	TableCell,
 	SxProps,
-	Theme
+	Theme,
 } from '@mui/material'
 import {IData} from '~/interfaces/data'
 
-const styles: {[key:string]: SxProps<Theme>} = {
+const styles: {[key: string]: SxProps<Theme>} = {
 	table: {
 		minWidth: 650,
 		'& .MuiTableCell-root': {
