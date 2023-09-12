@@ -1,5 +1,5 @@
-import {configureStore, combineReducers, ThunkAction, Action} from '@reduxjs/toolkit'
-import {createWrapper} from 'next-redux-wrapper'
+import {configureStore, combineReducers, createAction, ThunkAction, Action} from '@reduxjs/toolkit'
+import {createWrapper, HYDRATE} from 'next-redux-wrapper'
 import {persistReducer, persistStore, PersistConfig} from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import codingSlice from './coding/codingSlice'
@@ -30,7 +30,7 @@ export const makeStore = () => {
 	} else {
 		const persistConfig = {
 			key: 'nextjs',
-			whitelist: [''],
+			whitelist: [codingSlice.name],
 			storage,
 		}
 		const persistedReducer = persistReducer(persistConfig, rootReducer)
@@ -44,3 +44,4 @@ export const makeStore = () => {
 }
 
 export const wrapper = createWrapper<AppStore>(makeStore)
+export const HydrateAction = createAction<any>(HYDRATE)

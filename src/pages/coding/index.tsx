@@ -1,5 +1,6 @@
 import {Button, Tabs, Tab, styled} from '@mui/material'
 import TabPanel, {createProps} from '~/components/TabPanel'
+import Link from 'next/link'
 import {useState} from 'react'
 import {
 	DisplayDMemTable,
@@ -8,6 +9,9 @@ import {
 } from '~/components/DisplayDataTable'
 import CodeEditor from '~/components/CodeEditor'
 import client from '~/services/axios'
+import { useSelector, useDispatch } from 'react-redux'
+import { codeSelector } from '~/services/redux/coding/codingSelector'
+import {codingActions} from '~/services/redux/coding/codingSlice'
 
 const largeData = [
 	{name: 'x0', value: '0x0000f020'},
@@ -30,12 +34,13 @@ const largeData = [
 
 function CodingPage() {
 	const [tabIndex, setTabIndex] = useState(0)
-	const [code, setCode] = useState('')
+	const code = useSelector(codeSelector)
+	const dispatch = useDispatch()
 	const handleChangeTabIndex = (event: React.SyntheticEvent, index: number) => {
 		setTabIndex(index)
 	}
 
-	const handleChangeCode = (value: string) => setCode(value)
+	const handleChangeCode = (value: string) => dispatch(codingActions.setCode(value))
 
 	const handleRun = async () => {
 		try {
@@ -49,7 +54,9 @@ function CodingPage() {
 	return (
 		<div className='max-h-screen flex-1 w-full flex flex-col gap-4 px-4 p-1'>
 			<div className='flex flex-row gap-2'>
-				<Button variant='outlined'>Schematic view</Button>
+				<Button variant='outlined'>
+					<Link href='/coding/schematic-view'>Schematic view</Link>
+				</Button>
 				<Button variant='outlined'>Diasembly</Button>
 			</div>
 

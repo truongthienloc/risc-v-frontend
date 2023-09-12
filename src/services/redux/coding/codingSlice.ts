@@ -1,5 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit'
-import {HYDRATE} from 'next-redux-wrapper'
+import { HYDRATE } from 'next-redux-wrapper'
+// import { HydrateAction } from '..'
 
 export interface CodingState {
 	code: string
@@ -18,12 +19,10 @@ const codingSlice = createSlice({
 		},
 	},
 	extraReducers: {
-		[HYDRATE]: (state, action) => {
-			return {
-				...state,
-				...action.payload.coding,
-			}
-		},
+		[HYDRATE]: (state, action) => ({
+			...state,
+			...action.payload.coding
+		})
 	},
 })
 

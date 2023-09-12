@@ -70,6 +70,11 @@ function CodeEditor({value = '', onChange}: CodeEditorProps) {
 		}
 	}, [])
 
+	useEffect(() => {
+		console.log(value);
+		
+	}, [value]);
+
 	return (
 		<div ref={containerRef} className='min-w-[250px] h-full min-h-[300px]'>
 			<textarea ref={textareaRef} name='code-editor' id='code-editor'></textarea>
