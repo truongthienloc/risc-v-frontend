@@ -1,5 +1,3 @@
-// import dynamic from 'next/dynamic'
-// dynamic(() => {return import('codemirror/addon/mode/simple')}, {ssr: false})
 import '~/styles/globals.scss'
 import '~/styles/codeEditor.scss'
 import 'codemirror/lib/codemirror.css'
@@ -31,6 +29,7 @@ function App({Component, pageProps}: AppPropsWithLayout) {
 				<Head>
 					<title>RISC-V</title>
 					<meta charSet='utf-8' />
+					<link rel="icon" href="/images/LogoUIT.png" />
 				</Head>
 				<Component {...pageProps} />
 				<ToastContainer

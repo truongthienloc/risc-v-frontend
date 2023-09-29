@@ -3,6 +3,7 @@ import CodeEditor from "~/components/CodeEditor";
 import { useSelector, useDispatch } from "react-redux";
 import { codeSelector } from "~/services/redux/coding/codingSelector";
 import {codingActions} from "~/services/redux/coding/codingSlice";
+import { Datapath } from "~/components/Datapath";
 
 function schematicViewPage() {
     const code = useSelector(codeSelector);
@@ -10,7 +11,7 @@ function schematicViewPage() {
     const handleChangeCode = (value: string) => dispatch(codingActions.setCode(value));
 
     return (
-        <div className="w-full h-full flex flex-colmax-h-screen flex-1 w-full flex flex-col gap-4 px-4 p-1">
+        <div className="w-full h-full flex-1 flex flex-col gap-4 px-4 p-1">
             <div className='flex flex-row gap-2'>
 				<Button variant='outlined'>
 					<Link href='/coding/schematic-view'>Schematic view</Link>
@@ -28,11 +29,11 @@ function schematicViewPage() {
 					</div>
 				</div>
 				<div className='w-[70%] min-w-[450px] flex flex-col gap-1 border border-black rounded bg-white'>
-					
+					<Datapath />
 				</div>
 			</div>
 
-			<div className='flex flex-row gap-2'>
+			<div className='flex flex-row gap-2 pb-4'>
 				<Button variant='outlined'>
 					RUN
 				</Button>
