@@ -25,25 +25,25 @@ function App({Component, pageProps}: AppPropsWithLayout) {
 	}, [])
 	return getLayout(
 		// <Provider store={store}>
-			<PersistGate persistor={store.__persistor} loading={<div>Loading</div>}>
-				<Head>
-					<title>RISC-V</title>
-					<meta charSet='utf-8' />
-					<link rel="icon" href="/images/LogoUIT.png" />
-				</Head>
-				<Component {...pageProps} />
-				<ToastContainer
-					position='top-right'
-					autoClose={3000}
-					hideProgressBar={false}
-					newestOnTop={false}
-					closeOnClick
-					rtl={false}
-					pauseOnFocusLoss
-					draggable
-					theme='light'
-				/>
-			</PersistGate>
+		<PersistGate persistor={store.__persistor} loading={<div>Loading</div>}>
+			<Head>
+				<title>RISC-V</title>
+				<meta charSet='utf-8' />
+				<link rel='icon' href='/images/LogoUIT.png' />
+			</Head>
+			<Component {...pageProps} />
+			<ToastContainer
+				position='top-right'
+				autoClose={3000}
+				hideProgressBar={false}
+				newestOnTop={false}
+				closeOnClick
+				rtl={false}
+				pauseOnFocusLoss
+				draggable
+				theme='light'
+			/>
+		</PersistGate>
 		// </Provider>
 	)
 }

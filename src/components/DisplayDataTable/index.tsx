@@ -9,7 +9,7 @@ import {
 	SxProps,
 	Theme,
 } from '@mui/material'
-import {IData} from '~/interfaces/data'
+import {IAssembleData, IData} from '~/interfaces/data'
 
 const styles: {[key: string]: SxProps<Theme>} = {
 	table: {

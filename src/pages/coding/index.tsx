@@ -8,33 +8,23 @@ import {
 	DisplayRegisterTable,
 } from '~/components/DisplayDataTable'
 import CodeEditor from '~/components/CodeEditor'
-import client from '~/services/axios'
-import { useSelector, useDispatch } from 'react-redux'
-import { codeSelector } from '~/services/redux/coding/codingSelector'
+import {toast} from 'react-toastify'
+import {useSelector, useDispatch} from 'react-redux'
+import {codeSelector} from '~/services/redux/coding/codingSelector'
 import {codingActions} from '~/services/redux/coding/codingSlice'
+import {assembleDataSelector} from '~/services/redux/assembling/assemblingSelector'
+import {assemblingActions} from '~/services/redux/assembling/assemblingSlice'
+import * as codeAPI from '~/apis/code'
+import {convertPure2Standard} from '~/helpers/assembleDataFormatter'
+import {createDefaultRegisterData} from '~/helpers/registerData'
 
-const largeData = [
-	{name: 'x0', value: '0x0000f020'},
-	{name: 'x1', value: '0x0000f020'},
-	{name: 'x2', value: '0x0000f020'},
-	{name: 'x3', value: '0x0000f020'},
-	{name: 'x4', value: '0x0000f020'},
-	{name: 'x5', value: '0x0000f020'},
-	{name: 'x6', value: '0x0000f020'},
-	{name: 'x7', value: '0x0000f020'},
-	{name: 'x8', value: '0x0000f020'},
-	{name: 'x9', value: '0x0000f020'},
-	{name: 'x10', value: '0x0000f020'},
-	{name: 'x11', value: '0x0000f020'},
-	{name: 'x12', value: '0x0000f020'},
-	{name: 'x13', value: '0x0000f020'},
-	{name: 'x14', value: '0x0000f020'},
-	{name: 'x15', value: '0x0000f020'},
-]
+// defaultData is used when client don't run code or click reset
+const defaultData = createDefaultRegisterData()
 
 function CodingPage() {
 	const [tabIndex, setTabIndex] = useState(0)
 	const code = useSelector(codeSelector)
+	const assembleData = useSelector(assembleDataSelector)
 	const dispatch = useDispatch()
 	const handleChangeTabIndex = (event: React.SyntheticEvent, index: number) => {
 		setTabIndex(index)
@@ -45,10 +35,21 @@ function CodingPage() {
 	const handleRun = async () => {
 		try {
 			console.log('Click')
-			// const res = await client.post('/assembler', {code: code})
-			const res = await client.post('/assembler', {code: code})
-			console.log('res: ', res)
-		} catch (error) {}
+			const data = await toast.promise(codeAPI.runCode(code), {
+				pending: 'Đang biên dịch',
+				success: 'Biên dịch thành công',
+				error: 'Biên dịch thất bại',
+			})
+			const standardData = convertPure2Standard(data)
+			console.log('standard-data: ', standardData)
+			dispatch(assemblingActions.setAssembleData(standardData))
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
+	const handleReset = () => {
+		dispatch(assemblingActions.setAssembleData(null))
 	}
 
 	return (
@@ -61,9 +62,9 @@ function CodingPage() {
 			</div>
 
 			<div className='flex-1 flex flex-row gap-2'>
-				<div className='flex-1 flex flex-col'>
-					<div className='flex flex-col border border-black p-4 j'>
-						<h2 className='text-xl text-center'>CODE EDITOR</h2>
+				<div className='flex flex-col min-w-[300px]'>
+					<div className='flex flex-col p-4 j'>
+						<h2 className='text-xl text-left'>Input your code here:</h2>
 					</div>
 					<div className='flex flex-col h-full border border-black'>
 						<CodeEditor value={code} onChange={handleChangeCode} />
@@ -79,17 +80,26 @@ function CodingPage() {
 					<TabPanel index={0} value={tabIndex}>
 						<DisplayRegisterTable
 							sx={{maxHeight: 450}}
-							data={largeData}
+							data={
+								(assembleData && assembleData.Registers) ||
+								defaultData
+							}
 						/>
 					</TabPanel>
 					<TabPanel index={1} value={tabIndex}>
 						<DisplayDMemTable
-							data={[{name: 'x1', value: '0x0000d020'}]}
+							sx={{maxHeight: 450}}
+							data={(assembleData && assembleData.Data_memory) || []}
 						/>
 					</TabPanel>
 					<TabPanel index={2} value={tabIndex}>
 						<DisplayInstructionTable
-							data={[{name: 'x4', value: '0x0000f024'}]}
+							sx={{maxHeight: 450}}
+							data={
+								(assembleData &&
+									assembleData.Instruction_memory) ||
+								[]
+							}
 						/>
 					</TabPanel>
 				</div>
@@ -99,7 +109,9 @@ function CodingPage() {
 				<Button variant='outlined' onClick={handleRun}>
 					RUN
 				</Button>
-				<Button variant='outlined'>RESET</Button>
+				<Button variant='outlined' onClick={handleReset}>
+					RESET
+				</Button>
 				<Button variant='outlined'>STEP</Button>
 			</div>
 		</div>

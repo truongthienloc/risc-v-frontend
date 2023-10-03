@@ -1,2 +1,2 @@
-export * from './interface';
-export * from './datatypes';
+export * from './interface'
+export * from './datatypes'

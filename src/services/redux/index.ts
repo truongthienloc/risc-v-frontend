@@ -1,11 +1,19 @@
-import {configureStore, combineReducers, createAction, ThunkAction, Action} from '@reduxjs/toolkit'
+import {
+	configureStore,
+	combineReducers,
+	createAction,
+	ThunkAction,
+	Action,
+} from '@reduxjs/toolkit'
 import {createWrapper, HYDRATE} from 'next-redux-wrapper'
 import {persistReducer, persistStore, PersistConfig} from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import codingSlice from './coding/codingSlice'
+import assemblingSlice from './assembling/assemblingSlice'
 
 const rootReducer = combineReducers({
 	[codingSlice.name]: codingSlice.reducer,
+	[assemblingSlice.name]: assemblingSlice.reducer,
 })
 
 const makeConfiguredStore = () =>

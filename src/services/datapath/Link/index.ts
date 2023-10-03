@@ -1,260 +1,289 @@
-import short from 'short-uuid';
-import Port from '../Port';
-import VPort from '../Port/VPort';
-import { IGraphObject, Point, ILoader } from '../types';
-import LineSegment, { LineSegmentOptions } from '../LineSegment';
-import Scene from '../Scene';
+import short from 'short-uuid'
+import Port from '../Port'
+import VPort from '../Port/VPort'
+import {IGraphObject, Point, ILoader} from '../types'
+import LineSegment, {LineSegmentOptions} from '../LineSegment'
+import Scene from '../Scene'
 
-import { Vector } from '../Helpers';
+import {Vector} from '../Helpers'
 
 interface TextProps {
-    text: string;
-    color?: string;
-    fontSize?: number;
-    spacingX?: number;
-    spacingY?: number;
+	text: string
+	color?: string
+	fontSize?: number
+	spacingX?: number
+	spacingY?: number
 }
 
 export interface LinkOptions {
-    color?: string;
-    width?: number;
-    noArrow?: boolean;
-    firstText?: TextProps;
+	color?: string
+	width?: number
+	noArrow?: boolean
+	firstText?: TextProps
 }
 
 export default class Link implements IGraphObject, ILoader {
-    private _id: string;
-    private srcPort: Port;
-    private desPort: Port;
+	private _id: string
+	private srcPort: Port
+	private desPort: Port
 
-    private context: CanvasRenderingContext2D;
+	private context: CanvasRenderingContext2D
 
-    private lineSegments: Map<number, LineSegment> = new Map();
-    private breakpoints: Point[] = [];
+	private lineSegments: Map<number, LineSegment> = new Map()
+	private breakpoints: Point[] = []
 
-    private active: boolean = false;
-    private indexLineLoading: number = 0;
-    private data: any;
+	private active: boolean = false
+	private indexLineLoading: number = 0
+	private data: any
 
-    private options: LinkOptions;
+	private options: LinkOptions
 
-    constructor(
-        context: CanvasRenderingContext2D,
-        srcPort: Port,
-        desPort: Port,
-        options: LinkOptions = { color: 'black', width: 2, noArrow: undefined },
-    ) {
-        this._id = short.generate();
-        this.srcPort = srcPort;
-        this.desPort = desPort;
-        this.options = options;
+	constructor(
+		context: CanvasRenderingContext2D,
+		srcPort: Port,
+		desPort: Port,
+		options: LinkOptions = {color: 'black', width: 2, noArrow: undefined}
+	) {
+		this._id = short.generate()
+		this.srcPort = srcPort
+		this.desPort = desPort
+		this.options = options
 
-        this.srcPort.addOutput(this);
+		this.srcPort.addOutput(this)
 
-        this.context = context;
-        this.init();
-        this.render(0);
-    }
+		this.context = context
+		this.init()
+		this.render(0)
+	}
 
-    get id(): string {
-        return this._id;
-    }
+	get id(): string {
+		return this._id
+	}
 
-    private init(): void {
-        const startPoint = this.getStartPoint();
-        const endPoint = this.getEndPoint();
+	private init(): void {
+		const startPoint = this.getStartPoint()
+		const endPoint = this.getEndPoint()
 
-        this.addLineSegment(startPoint.x, startPoint.y, endPoint.x, endPoint.y, undefined, {
-            ...this.options,
-        });
-    }
+		this.addLineSegment(
+			startPoint.x,
+			startPoint.y,
+			endPoint.x,
+			endPoint.y,
+			undefined,
+			{
+				...this.options,
+			}
+		)
+	}
 
-    public render(dt: number): void {
-        let ls: LineSegment | undefined;
-        for (const [, lineSegment] of this.lineSegments.entries()) {
-            lineSegment.render(dt);
-            ls = lineSegment;
-        }
+	public render(dt: number): void {
+		let ls: LineSegment | undefined
+		for (const [, lineSegment] of this.lineSegments.entries()) {
+			lineSegment.render(dt)
+			ls = lineSegment
+		}
 
-        const lineSegment = ls as LineSegment;
-        const vector = Vector.fromPoints(lineSegment.sPoint, lineSegment.dPoint);
-        if (!(this.desPort instanceof VPort) && !this.options?.noArrow) {
-            this.drawArrow(vector.angle());
-        }
+		const lineSegment = ls as LineSegment
+		const vector = Vector.fromPoints(lineSegment.sPoint, lineSegment.dPoint)
+		if (!(this.desPort instanceof VPort) && !this.options?.noArrow) {
+			this.drawArrow(vector.angle())
+		}
 
-        this.renderText();
-    }
+		this.renderText()
+	}
 
-    public addBreakpoint(x: number, y: number): void {
-        this.breakpoints.push({ x, y });
-        this.clearAllLineSegments();
+	public addBreakpoint(x: number, y: number): void {
+		this.breakpoints.push({x, y})
+		this.clearAllLineSegments()
 
-        let startPoint = this.getStartPoint();
-        // const desPoint = this.desPort.getXY();
-        let index = 0;
-        for (const breakpoint of this.breakpoints) {
-            index++;
-            this.addLineSegment(startPoint.x, startPoint.y, breakpoint.x, breakpoint.y, index, {
-                ...this.options,
-            });
-            startPoint = breakpoint;
-        }
+		let startPoint = this.getStartPoint()
+		// const desPoint = this.desPort.getXY();
+		let index = 0
+		for (const breakpoint of this.breakpoints) {
+			index++
+			this.addLineSegment(
+				startPoint.x,
+				startPoint.y,
+				breakpoint.x,
+				breakpoint.y,
+				index,
+				{
+					...this.options,
+				}
+			)
+			startPoint = breakpoint
+		}
 
-        const endPoint = this.getEndPoint();
+		const endPoint = this.getEndPoint()
 
-        this.addLineSegment(startPoint.x, startPoint.y, endPoint.x, endPoint.y, index + 1, {
-            ...this.options,
-        });
-    }
+		this.addLineSegment(
+			startPoint.x,
+			startPoint.y,
+			endPoint.x,
+			endPoint.y,
+			index + 1,
+			{
+				...this.options,
+			}
+		)
+	}
 
-    public load(data: any, callback?: () => void): void {
-        this.data = data;
-        this.indexLineLoading = 1;
-        this.active = false;
-        const firstLine = this.lineSegments.get(1);
-        firstLine?.load(this.lsFinishedLoading.bind(this));
-        if (callback) {
-            callback();
-        }
-    }
+	public load(data: any, callback?: () => void): void {
+		this.data = data
+		this.indexLineLoading = 1
+		this.active = false
+		const firstLine = this.lineSegments.get(1)
+		firstLine?.load(this.lsFinishedLoading.bind(this))
+		if (callback) {
+			callback()
+		}
+	}
 
-    private lsFinishedLoading() {
-        this.indexLineLoading++;
+	private lsFinishedLoading() {
+		this.indexLineLoading++
 
-        if (this.indexLineLoading > this.lineSegments.size) {
-            this.indexLineLoading = 0;
-            this.active = true;
-            this.desPort.load(this.data);
-            return;
-        }
+		if (this.indexLineLoading > this.lineSegments.size) {
+			this.indexLineLoading = 0
+			this.active = true
+			this.desPort.load(this.data)
+			return
+		}
 
-        const lineSegment = this.lineSegments.get(this.indexLineLoading);
+		const lineSegment = this.lineSegments.get(this.indexLineLoading)
 
-        lineSegment?.load(this.lsFinishedLoading.bind(this));
-    }
+		lineSegment?.load(this.lsFinishedLoading.bind(this))
+	}
 
-    private clearAllLineSegments(): void {
-        for (const [, lineSegment] of this.lineSegments.entries()) {
-            lineSegment.destroy();
-        }
+	private clearAllLineSegments(): void {
+		for (const [, lineSegment] of this.lineSegments.entries()) {
+			lineSegment.destroy()
+		}
 
-        this.lineSegments.clear();
-    }
+		this.lineSegments.clear()
+	}
 
-    private renderText(): void {
-        if (!this.options?.firstText) {
-            return;
-        }
-        // console.log(this.options.firstText);
-        
-        const { text, color, spacingX, spacingY } = this.options.firstText;
-        const position = this.getStartPoint();
-        const textX = (position.x + (spacingX ?? 0)) * Scene.CELL;
-        const textY = (position.y + (spacingY ?? 0)) * Scene.CELL;
-        this.context.font = `${Scene.FONT_SIZE}px Arial`;
-        this.context.fillStyle = color || 'black';
-        this.context.textAlign = 'left';
-        this.context.textBaseline = 'bottom';
-        this.context.fillText(text, textX, textY);
-    }
+	private renderText(): void {
+		if (!this.options?.firstText) {
+			return
+		}
+		// console.log(this.options.firstText);
 
-    private addLineSegment(
-        fx: number,
-        fy: number,
-        lx: number,
-        ly: number,
-        index: number = 1,
-        options?: LineSegmentOptions,
-    ): LineSegment {
-        const _lineSegment = new LineSegment(this.context, fx, fy, lx, ly, index, options);
-        this.lineSegments.set(_lineSegment.index, _lineSegment);
-        return _lineSegment;
-    }
+		const {text, color, spacingX, spacingY} = this.options.firstText
+		const position = this.getStartPoint()
+		const textX = (position.x + (spacingX ?? 0)) * Scene.CELL
+		const textY = (position.y + (spacingY ?? 0)) * Scene.CELL
+		this.context.font = `${Scene.FONT_SIZE}px Arial`
+		this.context.fillStyle = color || 'black'
+		this.context.textAlign = 'left'
+		this.context.textBaseline = 'bottom'
+		this.context.fillText(text, textX, textY)
+	}
 
-    private drawArrow(angle: number = 0): void {
-        const endPoint = this.getEndPoint();
+	private addLineSegment(
+		fx: number,
+		fy: number,
+		lx: number,
+		ly: number,
+		index: number = 1,
+		options?: LineSegmentOptions
+	): LineSegment {
+		const _lineSegment = new LineSegment(
+			this.context,
+			fx,
+			fy,
+			lx,
+			ly,
+			index,
+			options
+		)
+		this.lineSegments.set(_lineSegment.index, _lineSegment)
+		return _lineSegment
+	}
 
-        const { x: xt, y: yt } = endPoint;
-        const x = xt * Scene.CELL;
-        const y = yt * Scene.CELL;
-        const size = 0.65 * Scene.CELL; // Độ dài một cạnh của tam giác
-        const height = (Math.sqrt(3) / 2) * size; // Chiều cao của tam giác
+	private drawArrow(angle: number = 0): void {
+		const endPoint = this.getEndPoint()
 
-        // Di chuyển tọa độ gốc về tâm của tam giác
-        this.context.translate(x, y);
+		const {x: xt, y: yt} = endPoint
+		const x = xt * Scene.CELL
+		const y = yt * Scene.CELL
+		const size = 0.65 * Scene.CELL // Độ dài một cạnh của tam giác
+		const height = (Math.sqrt(3) / 2) * size // Chiều cao của tam giác
 
-        // Xoay theo góc truyền vào
-        this.context.rotate((angle * Math.PI) / 180);
+		// Di chuyển tọa độ gốc về tâm của tam giác
+		this.context.translate(x, y)
 
-        // Di chuyển tọa độ về lại đỉnh của tam giác
-        this.context.translate(-x, -y);
+		// Xoay theo góc truyền vào
+		this.context.rotate((angle * Math.PI) / 180)
 
-        this.context.beginPath();
-        this.context.moveTo(x, y - height / 2);
-        this.context.lineTo(x - size / 2, y + height / 2);
-        this.context.lineTo(x + size / 2, y + height / 2);
-        this.context.closePath();
-        this.context.fillStyle = this.active ? 'red' : this.options.color || 'black';
-        this.context.fill();
+		// Di chuyển tọa độ về lại đỉnh của tam giác
+		this.context.translate(-x, -y)
 
-        this.context.resetTransform();
-        this.context.restore();
-    }
+		this.context.beginPath()
+		this.context.moveTo(x, y - height / 2)
+		this.context.lineTo(x - size / 2, y + height / 2)
+		this.context.lineTo(x + size / 2, y + height / 2)
+		this.context.closePath()
+		this.context.fillStyle = this.active ? 'red' : this.options.color || 'black'
+		this.context.fill()
 
-    private getStartPoint(): Point {
-        if (!(this.srcPort instanceof VPort)) {
-            const srcPoint = this.srcPort.getXY();
+		this.context.resetTransform()
+		this.context.restore()
+	}
 
-            let endPoint = this.desPort.getXY();
-            if (this.breakpoints.length > 0) {
-                endPoint = this.breakpoints[0];
-            }
+	private getStartPoint(): Point {
+		if (!(this.srcPort instanceof VPort)) {
+			const srcPoint = this.srcPort.getXY()
 
-            const vt = Vector.fromPoints(srcPoint, endPoint).normalize();
+			let endPoint = this.desPort.getXY()
+			if (this.breakpoints.length > 0) {
+				endPoint = this.breakpoints[0]
+			}
 
-            return {
-                x: srcPoint.x + vt.x * Port.R,
-                y: srcPoint.y + vt.y * Port.R,
-            };
-        }
+			const vt = Vector.fromPoints(srcPoint, endPoint).normalize()
 
-        return this.srcPort.getXY();
-    }
+			return {
+				x: srcPoint.x + vt.x * Port.R,
+				y: srcPoint.y + vt.y * Port.R,
+			}
+		}
 
-    private getEndPoint(): Point {
-        if (
-            !(this.desPort instanceof VPort) &&
-            (this.options.noArrow === undefined || this.options.noArrow === false)
-        ) {
-            const desPoint = this.desPort.getXY();
+		return this.srcPort.getXY()
+	}
 
-            let startPoint = this.srcPort.getXY();
-            if (this.breakpoints.length > 0) {
-                startPoint = this.breakpoints[this.breakpoints.length - 1];
-            }
+	private getEndPoint(): Point {
+		if (
+			!(this.desPort instanceof VPort) &&
+			(this.options.noArrow === undefined || this.options.noArrow === false)
+		) {
+			const desPoint = this.desPort.getXY()
 
-            const vt = Vector.fromPoints(startPoint, desPoint).normalize();
+			let startPoint = this.srcPort.getXY()
+			if (this.breakpoints.length > 0) {
+				startPoint = this.breakpoints[this.breakpoints.length - 1]
+			}
 
-            return {
-                x: desPoint.x - vt.x * 2 * Port.R,
-                y: desPoint.y - vt.y * 2 * Port.R,
-            };
-        } else {
-            const desPoint = this.desPort.getXY();
+			const vt = Vector.fromPoints(startPoint, desPoint).normalize()
 
-            let startPoint = this.srcPort.getXY();
-            if (this.breakpoints.length > 0) {
-                startPoint = this.breakpoints[this.breakpoints.length - 1];
-            }
+			return {
+				x: desPoint.x - vt.x * 2 * Port.R,
+				y: desPoint.y - vt.y * 2 * Port.R,
+			}
+		} else {
+			const desPoint = this.desPort.getXY()
 
-            const vt = Vector.fromPoints(startPoint, desPoint).normalize();
+			let startPoint = this.srcPort.getXY()
+			if (this.breakpoints.length > 0) {
+				startPoint = this.breakpoints[this.breakpoints.length - 1]
+			}
 
-            return {
-                x: desPoint.x - vt.x * Port.R,
-                y: desPoint.y - vt.y * Port.R,
-            };
-        }
+			const vt = Vector.fromPoints(startPoint, desPoint).normalize()
 
-        // return this.desPort.getXY() - Port.R;
-    }
+			return {
+				x: desPoint.x - vt.x * Port.R,
+				y: desPoint.y - vt.y * Port.R,
+			}
+		}
+
+		// return this.desPort.getXY() - Port.R;
+	}
 }

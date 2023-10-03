@@ -30,7 +30,7 @@ const directives = [
 ];
 const directivesPattern = new RegExp('\\.(?:' + directives.join('|') + ')')
 
-const registers = /x(?:[0-9]|[1-2][0-9]|31)|pc/
+const registers = /x[0-9]\d*|pc/
 const registerAbiNames =
 	/zero|ra|[fsgt]p|t[0-6]|f?s(?:[0-9]|1[01])|f?a[0-7]|ft(?:[0-9]|1[01])/
 
@@ -139,6 +139,10 @@ export const defineMode = (CodeMirror: any) => {
 			// Reference to local label
 			{regex: /[1-9]\d*[bf]/, token: 'variable-2'},
 
+			// Registers
+			{regex: registers, token: 'variable'},
+			{regex: registerAbiNames, token: 'variable-2'},
+
 			// Integer literal
 			{regex: /-?(?:0|[1-9]\d*|0x[0-9A-Fa-f]+)\b/, token: 'number'},
 			// String literal
@@ -155,10 +159,6 @@ export const defineMode = (CodeMirror: any) => {
 			{regex: extM, token: 'builtin'},
 			{regex: baseI, token: 'builtin'},
 			{regex: pseudos, token: 'builtin'},
-
-			// Registers
-			{regex: registers, token: 'variable'},
-			{regex: registerAbiNames, token: 'variable-2'},
 		],
 	})
 
