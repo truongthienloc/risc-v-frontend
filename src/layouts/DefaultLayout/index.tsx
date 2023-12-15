@@ -1,5 +1,5 @@
 import React from 'react'
-import NavBar from './NavBar';
+import NavBar from './NavBar'
 
 interface DefaultLayoutProps {
 	children: React.ReactNode
@@ -7,11 +7,11 @@ interface DefaultLayoutProps {
 
 function DefaultLayout({children}: DefaultLayoutProps) {
 	return (
-	<div className='w-full min-h-screen flex flex-col gap-4'>
-		<NavBar />
-		{children}
-	</div>
-	);
+		<div className='w-full h-screen flex flex-col gap-4 overflow-auto'>
+			<NavBar />
+			{children}
+		</div>
+	)
 }
 
 export default DefaultLayout
