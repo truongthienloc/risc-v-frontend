@@ -76,7 +76,9 @@ function CodeEditor({value = '', onChange}: CodeEditorProps) {
 	// }, [value]);
 
 	return (
-		<div ref={containerRef} className='min-w-[250px] h-full min-h-[300px]'>
+		<div
+			ref={containerRef}
+			className='flex-1 min-w-[250px] h-full min-h-[300px] text-base'>
 			<textarea ref={textareaRef} name='code-editor' id='code-editor'></textarea>
 		</div>
 	)

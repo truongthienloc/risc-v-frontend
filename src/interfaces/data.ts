@@ -3,8 +3,13 @@ export interface IData {
 	value: string
 }
 
+export interface ITwinRegister {
+	register1: IData
+	register2: IData
+}
+
 export interface IAssembleData {
-	Registers: IData[]
+	Registers: ITwinRegister[]
 	Instruction_memory: IData[]
 	Data_memory: IData[]
 	Graphic: {[key: number]: string}

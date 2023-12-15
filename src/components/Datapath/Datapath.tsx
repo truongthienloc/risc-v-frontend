@@ -22,7 +22,7 @@ function Datapath() {
 
 	return (
 		<div
-			className='w-full h-full flex flex-col overflow-y-auto'
+			className='w-full h-full flex flex-col overflow-y-auto text-lg'
 			id='datapath'></div>
 	)
 }

@@ -1,4 +1,4 @@
-import {Button, Tabs, Tab, styled} from '@mui/material'
+import {Button, Tabs, Tab, styled, OutlinedInput} from '@mui/material'
 import TabPanel, {createProps} from '~/components/TabPanel'
 import Link from 'next/link'
 import {useState} from 'react'
@@ -15,11 +15,14 @@ import {codingActions} from '~/services/redux/coding/codingSlice'
 import {assembleDataSelector} from '~/services/redux/assembling/assemblingSelector'
 import {assemblingActions} from '~/services/redux/assembling/assemblingSlice'
 import * as codeAPI from '~/apis/code'
-import {convertPure2Standard} from '~/helpers/assembleDataFormatter'
+import {
+	convertPure2Standard,
+	convertRegisters2TwinRegisters,
+} from '~/helpers/assembleDataFormatter'
 import {createDefaultRegisterData} from '~/helpers/registerData'
 
 // defaultData is used when client don't run code or click reset
-const defaultData = createDefaultRegisterData()
+const defaultData = convertRegisters2TwinRegisters(createDefaultRegisterData())
 
 function CodingPage() {
 	const [tabIndex, setTabIndex] = useState(0)
@@ -58,11 +61,11 @@ function CodingPage() {
 				<Button variant='outlined'>
 					<Link href='/coding/schematic-view'>Schematic view</Link>
 				</Button>
-				<Button variant='outlined'>Diasembly</Button>
+				<Button variant='outlined'>Disassembly</Button>
 			</div>
 
 			<div className='flex-1 flex flex-row gap-2'>
-				<div className='flex flex-col min-w-[300px]'>
+				<div className='flex-1 flex flex-col min-w-[300px]'>
 					<div className='flex flex-col p-4 j'>
 						<h2 className='text-xl text-left'>Input your code here:</h2>
 					</div>
@@ -70,18 +73,21 @@ function CodingPage() {
 						<CodeEditor value={code} onChange={handleChangeCode} />
 					</div>
 				</div>
-				<div className='flex-[1] flex flex-col gap-1'>
+				<div className='h-full flex flex-col gap-1'>
 					<Tabs value={tabIndex} onChange={handleChangeTabIndex}>
 						<Tab label='REGISTERS' {...createProps(0)} />
 						<Tab label='DATA MEMORY' {...createProps(1)} />
-						<Tab label='INSTRUCTIONS' {...createProps(2)} />
+						<Tab label='INSTRUCTIONS MEM' {...createProps(2)} />
 					</Tabs>
 
 					<TabPanel index={0} value={tabIndex}>
 						<DisplayRegisterTable
-							sx={{maxHeight: 450}}
+							// sx={{maxHeight: 450}}
 							data={
-								(assembleData && assembleData.Registers) ||
+								(assembleData &&
+									assembleData.Registers[
+										assembleData.length - 1
+									].data) ||
 								defaultData
 							}
 						/>
@@ -89,7 +95,13 @@ function CodingPage() {
 					<TabPanel index={1} value={tabIndex}>
 						<DisplayDMemTable
 							sx={{maxHeight: 450}}
-							data={(assembleData && assembleData.Data_memory) || []}
+							data={
+								(assembleData &&
+									assembleData.Data_memory[
+										assembleData.length - 1
+									].data) ||
+								[]
+							}
 						/>
 					</TabPanel>
 					<TabPanel index={2} value={tabIndex}>
