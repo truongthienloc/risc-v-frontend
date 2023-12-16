@@ -27,7 +27,7 @@ function CodeEditor({value = '', onChange}: CodeEditorProps) {
 		codeRef.current.setSize(width, height)
 	}, [])
 
-	const createCodeEditor = async () => {
+	const createCodeEditor = useCallback(async () => {
 		if (codeRef.current) {
 			return
 		}
@@ -55,7 +55,7 @@ function CodeEditor({value = '', onChange}: CodeEditorProps) {
 		code.on('change', (ins) => {
 			onChange?.(ins.getValue())
 		})
-	}
+	}, [])
 
 	useEffect(() => {
 		if (isStart.current) {
@@ -68,12 +68,7 @@ function CodeEditor({value = '', onChange}: CodeEditorProps) {
 		return () => {
 			window.removeEventListener('resize', handleContainerResize)
 		}
-	}, [])
-
-	// useEffect(() => {
-	// 	console.log(value);
-
-	// }, [value]);
+	}, [handleContainerResize, createCodeEditor])
 
 	return (
 		<div
