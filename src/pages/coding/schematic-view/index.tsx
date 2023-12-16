@@ -5,7 +5,7 @@ import {codeSelector} from '~/services/redux/coding/codingSelector'
 import {codingActions} from '~/services/redux/coding/codingSlice'
 import {Datapath} from '~/components/Datapath'
 
-function schematicViewPage() {
+function SchematicViewPage() {
 	const code = useSelector(codeSelector)
 	const dispatch = useDispatch()
 	const handleChangeCode = (value: string) => dispatch(codingActions.setCode(value))
@@ -42,4 +42,4 @@ function schematicViewPage() {
 	)
 }
 
-export default schematicViewPage
+export default SchematicViewPage
