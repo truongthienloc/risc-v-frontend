@@ -13,13 +13,13 @@ import Mux from '../Block/Mux'
 import Mux3 from '../Block/Mux3'
 import PC from '../Block/PC'
 import Register from '../Block/Register'
-import ShiftLeft, {ShiftLeft12} from '../Block/ShiftLeft'
+import ShiftLeft, { ShiftLeft12 } from '../Block/ShiftLeft'
 import BranchingLink from '../BranchingLink'
-import {LinkOptions} from '../Link'
+import { LinkOptions } from '../Link'
 import Port from '../Port'
 import Scene from '../Scene'
 
-import {HEAVY_LINE_COLOR, LINE_COLOR} from '../constants'
+import { HEAVY_LINE_COLOR, LINE_COLOR } from '../constants'
 
 export default class DefaultDatapath {
 	private scene: Scene
@@ -299,7 +299,7 @@ export default class DefaultDatapath {
 		const signbitPort = this.links.createPort(
 			inBraSignBit.getXY().x,
 			outConSlt.getXY().y + 0.5,
-			{color: LINE_COLOR}
+			{ color: LINE_COLOR }
 		)
 
 		const addPort0 = this.links.createPort(
@@ -381,15 +381,15 @@ export default class DefaultDatapath {
 
 		this.createLink(outConJal, inBraJal, [], {
 			color: LINE_COLOR,
-			firstText: {text: 'Jal', color: LINE_COLOR, spacingX: 1},
+			firstText: { text: 'Jal', color: LINE_COLOR, spacingX: 1 },
 		})
 		this.createLink(outConJalr, inBraJalr, [], {
 			color: LINE_COLOR,
-			firstText: {text: 'Jalr', color: LINE_COLOR, spacingX: 1},
+			firstText: { text: 'Jalr', color: LINE_COLOR, spacingX: 1 },
 		})
 		this.createLink(outConBranch, inBraBranch, [], {
 			color: LINE_COLOR,
-			firstText: {text: 'Branch', color: LINE_COLOR, spacingX: 1},
+			firstText: { text: 'Branch', color: LINE_COLOR, spacingX: 1 },
 		})
 		this.createLink(
 			outALUZero,
@@ -403,16 +403,16 @@ export default class DefaultDatapath {
 			outALUSignBit,
 			signbitPort,
 			[[inBraSignBit.getXY().x, outALUSignBit.getXY().y]],
-			{color: LINE_COLOR}
+			{ color: LINE_COLOR }
 		)
-		this.createLink(signbitPort, inBraSignBit, [], {color: LINE_COLOR})
+		this.createLink(signbitPort, inBraSignBit, [], { color: LINE_COLOR })
 		this.createLink(
 			outConAuipcOrLui,
 			inMux2_control,
 			[[inMux2_control.getXY().x, outConAuipcOrLui.getXY().y]],
 			{
 				color: LINE_COLOR,
-				firstText: {text: 'AuipcOrLui', color: LINE_COLOR, spacingX: 1},
+				firstText: { text: 'AuipcOrLui', color: LINE_COLOR, spacingX: 1 },
 			}
 		)
 		this.createLink(
@@ -421,7 +421,7 @@ export default class DefaultDatapath {
 			[[inMux8_control.getXY().x, outConWb.getXY().y]],
 			{
 				color: LINE_COLOR,
-				firstText: {text: 'Wb', color: LINE_COLOR, spacingX: 1},
+				firstText: { text: 'Wb', color: LINE_COLOR, spacingX: 1 },
 			}
 		)
 		this.createLink(
@@ -430,7 +430,7 @@ export default class DefaultDatapath {
 			[[inMux7_control.getXY().x, outConSlt.getXY().y]],
 			{
 				color: LINE_COLOR,
-				firstText: {text: 'Slt', color: LINE_COLOR, spacingX: 1},
+				firstText: { text: 'Slt', color: LINE_COLOR, spacingX: 1 },
 			}
 		)
 		this.createLink(
@@ -439,7 +439,7 @@ export default class DefaultDatapath {
 			[[inMux4_control.getXY().x, outConMemtoRegister.getXY().y]],
 			{
 				color: LINE_COLOR,
-				firstText: {text: 'MemtoRegister', color: LINE_COLOR, spacingX: 1},
+				firstText: { text: 'MemtoRegister', color: LINE_COLOR, spacingX: 1 },
 			}
 		)
 		this.createLink(
@@ -451,7 +451,7 @@ export default class DefaultDatapath {
 			],
 			{
 				color: LINE_COLOR,
-				firstText: {text: 'ALUOp', color: LINE_COLOR, spacingX: 1},
+				firstText: { text: 'ALUOp', color: LINE_COLOR, spacingX: 1 },
 			}
 		)
 		this.createLink(
@@ -460,7 +460,7 @@ export default class DefaultDatapath {
 			[[inDataGenUnsigned.getXY().x, outConUnsigned.getXY().y]],
 			{
 				color: LINE_COLOR,
-				firstText: {text: 'Unsigned', color: LINE_COLOR, spacingX: 1},
+				firstText: { text: 'Unsigned', color: LINE_COLOR, spacingX: 1 },
 			}
 		)
 		this.createLink(
@@ -479,7 +479,7 @@ export default class DefaultDatapath {
 			],
 			{
 				color: LINE_COLOR,
-				firstText: {text: 'MemRead', color: LINE_COLOR, spacingX: 1},
+				firstText: { text: 'MemRead', color: LINE_COLOR, spacingX: 1 },
 			}
 		)
 		this.createLink(
@@ -488,7 +488,7 @@ export default class DefaultDatapath {
 			[[inDmem_MemWrite.getXY().x, outConMemWrite.getXY().y]],
 			{
 				color: LINE_COLOR,
-				firstText: {text: 'MemWrite', color: LINE_COLOR, spacingX: 1},
+				firstText: { text: 'MemWrite', color: LINE_COLOR, spacingX: 1 },
 			}
 		)
 		this.createLink(
@@ -497,7 +497,7 @@ export default class DefaultDatapath {
 			[[inMux3_control.getXY().x, outConALUSrc.getXY().y]],
 			{
 				color: LINE_COLOR,
-				firstText: {text: 'ALUSrc', color: LINE_COLOR, spacingX: 1},
+				firstText: { text: 'ALUSrc', color: LINE_COLOR, spacingX: 1 },
 			}
 		)
 		this.createLink(
@@ -506,14 +506,14 @@ export default class DefaultDatapath {
 			[[inReg_control.getXY().x, outConRegWrite.getXY().y]],
 			{
 				color: LINE_COLOR,
-				firstText: {text: 'RegWrite', color: LINE_COLOR, spacingX: 1},
+				firstText: { text: 'RegWrite', color: LINE_COLOR, spacingX: 1 },
 			}
 		)
 		this.createLink(
 			outALUCon,
 			inALU_control,
 			[[inALU_control.getXY().x, outALUCon.getXY().y]],
-			{color: LINE_COLOR}
+			{ color: LINE_COLOR }
 		)
 		this.createLink(
 			outBraPcSrc1,
@@ -521,7 +521,7 @@ export default class DefaultDatapath {
 			[[inMux0_control.getXY().x, outBraPcSrc1.getXY().y]],
 			{
 				color: LINE_COLOR,
-				firstText: {text: 'PcSrc1', color: LINE_COLOR, spacingX: 0.5},
+				firstText: { text: 'PcSrc1', color: LINE_COLOR, spacingX: 0.5 },
 			}
 		)
 		this.createLink(
@@ -530,7 +530,7 @@ export default class DefaultDatapath {
 			[[inMux1_control.getXY().x, outBraPcSrc2.getXY().y]],
 			{
 				color: LINE_COLOR,
-				firstText: {text: 'PcSrc2', color: LINE_COLOR, spacingX: 0.5},
+				firstText: { text: 'PcSrc2', color: LINE_COLOR, spacingX: 0.5 },
 			}
 		)
 		this.createLink(
@@ -539,14 +539,14 @@ export default class DefaultDatapath {
 			[[inMux5_control.getXY().x, outBraJump.getXY().y]],
 			{
 				color: LINE_COLOR,
-				firstText: {text: 'Jump', color: LINE_COLOR, spacingX: 0.5},
+				firstText: { text: 'Jump', color: LINE_COLOR, spacingX: 0.5 },
 			}
 		)
 		this.createLink(
 			signbitPort,
 			inMux6_control,
 			[[inMux6_control.getXY().x, signbitPort.getXY().y]],
-			{color: LINE_COLOR}
+			{ color: LINE_COLOR }
 		)
 
 		this.createLink(aluPort, inMux1_1, [

@@ -1,7 +1,7 @@
 import Block from '..'
 import Port from '../../Port'
 import Scene from '../../Scene'
-import {LINE_COLOR} from '../../constants'
+import { LINE_COLOR } from '../../constants'
 
 type BlockPort = 'input' | 'input-Unsigned' | 'output'
 

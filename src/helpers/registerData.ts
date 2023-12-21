@@ -1,4 +1,4 @@
-import {IData} from '~/interfaces/data'
+import { IData } from '~/interfaces/data'
 
 const defaultData = '0x00000000'
 

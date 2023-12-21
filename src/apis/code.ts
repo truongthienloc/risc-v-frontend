@@ -1,6 +1,6 @@
 import client from '~/services/axios'
 import apisConfig from '~/configs/apis.json'
-import {IPureAssembleData} from '~/interfaces/data2'
+import { IPureAssembleData } from '~/interfaces/data2'
 
 export const runCode = (code: string) => {
 	return new Promise<IPureAssembleData>(async (resolve, rejects) => {

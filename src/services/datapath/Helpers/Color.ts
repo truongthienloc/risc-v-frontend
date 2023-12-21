@@ -1,6 +1,6 @@
 export default class Color {
 	// Một bảng ánh xạ đối tượng với tên màu và giá trị RGB tương ứng
-	private static readonly COLOR_MAP: {[name: string]: [number, number, number]} = {
+	private static readonly COLOR_MAP: { [name: string]: [number, number, number] } = {
 		black: [0, 0, 0],
 		white: [255, 255, 255],
 		red: [255, 0, 0],

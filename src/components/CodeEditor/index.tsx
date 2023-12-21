@@ -1,5 +1,5 @@
-import {useRef, useEffect, useCallback} from 'react'
-import {defineMode} from '~/services/codemirror'
+import { useRef, useEffect, useCallback } from 'react'
+import { defineMode } from '~/services/codemirror'
 import CodeMirror from 'codemirror'
 
 interface CodeEditorProps {
@@ -7,7 +7,7 @@ interface CodeEditorProps {
 	onChange?: (value: string) => void
 }
 
-function CodeEditor({value = '', onChange}: CodeEditorProps) {
+function CodeEditor({ value = '', onChange }: CodeEditorProps) {
 	const textareaRef = useRef<HTMLTextAreaElement>(null)
 	const containerRef = useRef<HTMLDivElement>(null)
 	const codeRef = useRef<CodeMirror.EditorFromTextArea>()

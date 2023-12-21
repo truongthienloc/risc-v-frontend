@@ -1,9 +1,10 @@
-import {Button, Link} from '@mui/material'
+import { Button } from '@mui/material'
+import Link from 'next/link'
 import CodeEditor from '~/components/CodeEditor'
-import {useSelector, useDispatch} from 'react-redux'
-import {codeSelector} from '~/services/redux/coding/codingSelector'
-import {codingActions} from '~/services/redux/coding/codingSlice'
-import {Datapath} from '~/components/Datapath'
+import { useSelector, useDispatch } from 'react-redux'
+import { codeSelector } from '~/services/redux/coding/codingSelector'
+import { codingActions } from '~/services/redux/coding/codingSlice'
+import { Datapath } from '~/components/Datapath'
 
 function SchematicViewPage() {
 	const code = useSelector(codeSelector)
@@ -16,7 +17,9 @@ function SchematicViewPage() {
 				<Button variant='outlined'>
 					<Link href='/coding/schematic-view'>Schematic view</Link>
 				</Button>
-				<Button variant='outlined'>Diasembly</Button>
+				<Button variant='outlined'>
+					<Link href='/coding/disassembly'>Disassembly</Link>
+				</Button>
 			</div>
 
 			<div className='flex-1 flex flex-row gap-2'>

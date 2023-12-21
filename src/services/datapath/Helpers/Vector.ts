@@ -1,4 +1,4 @@
-import {Point} from '../types'
+import { Point } from '../types'
 
 export default class Vector {
 	public x: number

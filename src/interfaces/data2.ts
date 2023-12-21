@@ -1,11 +1,11 @@
-import {ITwinRegister, IData} from './data'
+import { ITwinRegister, IData } from './data'
 
 export interface IDataMemory {
-	[key: string]: {[key: string]: string}
+	[key: string]: { [key: string]: string }
 }
 
 export interface IGraphic {
-	[key: string]: {[key: string]: string}
+	[key: string]: { [key: string]: string }
 }
 
 export interface IInsMemory {
@@ -13,7 +13,7 @@ export interface IInsMemory {
 }
 
 export interface IRegisters {
-	[key: string]: {[key: string]: string}
+	[key: string]: { [key: string]: string }
 }
 
 export interface IPureAssembleData {

@@ -12,12 +12,12 @@ import {
 	SxProps,
 	Theme,
 } from '@mui/material'
-import {ChangeEvent, useState} from 'react'
-import {IAssembleData, IData, ITwinRegister} from '~/interfaces/data'
-import {toast} from 'react-toastify'
-import {createRangeDmemData} from '~/helpers/rangeDmemData'
+import { ChangeEvent, useState } from 'react'
+import { IAssembleData, IData, ITwinRegister } from '~/interfaces/data'
+import { toast } from 'react-toastify'
+import { createRangeDmemData } from '~/helpers/rangeDmemData'
 
-const styles: {[key: string]: SxProps<Theme>} = {
+const styles: { [key: string]: SxProps<Theme> } = {
 	table: {
 		minWidth: 650,
 		maxWidth: 1000,
@@ -46,7 +46,7 @@ interface DisplayRegistersTableProps {
 	sx?: SxProps<Theme>
 }
 
-export function DisplayDMemTable({data, sx}: DisplayDataTableProps) {
+export function DisplayDMemTable({ data, sx }: DisplayDataTableProps) {
 	const [input, setInput] = useState('0x00000000')
 	const [displayedData, setDisplayedData] = useState(
 		createRangeDmemData(data || [], '0x00000000')
@@ -76,7 +76,7 @@ export function DisplayDMemTable({data, sx}: DisplayDataTableProps) {
 					onChange={handleChangeInput}
 				/>
 				<Button
-					sx={{gap: '0.25rem'}}
+					sx={{ gap: '0.25rem' }}
 					variant='contained'
 					onClick={handleButtonClick}>
 					{/* <SearchIcon /> */}
@@ -100,7 +100,7 @@ export function DisplayDMemTable({data, sx}: DisplayDataTableProps) {
 									key={value.name}
 									sx={
 										value.value !== '0x00000000'
-											? {backgroundColor: 'FFEED9'}
+											? { backgroundColor: 'FFEED9' }
 											: {}
 									}>
 									<TableCell>{value.name}</TableCell>
@@ -117,7 +117,7 @@ export function DisplayDMemTable({data, sx}: DisplayDataTableProps) {
 	)
 }
 
-export function DisplayRegisterTable({data, sx}: DisplayRegistersTableProps) {
+export function DisplayRegisterTable({ data, sx }: DisplayRegistersTableProps) {
 	return (
 		<TableContainer component={Paper} sx={sx}>
 			<Table sx={styles.table} stickyHeader>
@@ -149,7 +149,7 @@ export function DisplayRegisterTable({data, sx}: DisplayRegistersTableProps) {
 	)
 }
 
-export function DisplayInstructionTable({data, sx}: DisplayDataTableProps) {
+export function DisplayInstructionTable({ data, sx }: DisplayDataTableProps) {
 	return (
 		<TableContainer component={Paper} sx={sx}>
 			<Table sx={styles.table} stickyHeader>

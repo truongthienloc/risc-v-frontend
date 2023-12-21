@@ -1,1 +1,1 @@
-export {default as Datapath} from './Datapath'
+export { default as Datapath } from './Datapath'
