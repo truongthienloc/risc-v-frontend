@@ -12,7 +12,7 @@ interface TabPanelProps {
 	className?: string
 }
 
-function TabPanel({children, value, index, className}: TabPanelProps) {
+function TabPanel({ children, value, index, className }: TabPanelProps) {
 	return (
 		<div
 			role='tabpanel'

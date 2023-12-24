@@ -1,13 +1,14 @@
-import {useRef, useEffect, useCallback} from 'react'
-import {defineMode} from '~/services/codemirror'
+import { useRef, useEffect, useCallback } from 'react'
+import { defineMode } from '~/services/codemirror'
 import CodeMirror from 'codemirror'
 
 interface CodeEditorProps {
 	value?: string
 	onChange?: (value: string) => void
+	disable?: boolean
 }
 
-function CodeEditor({value = '', onChange}: CodeEditorProps) {
+function CodeEditor({ value = '', onChange, disable = false }: CodeEditorProps) {
 	const textareaRef = useRef<HTMLTextAreaElement>(null)
 	const containerRef = useRef<HTMLDivElement>(null)
 	const codeRef = useRef<CodeMirror.EditorFromTextArea>()
@@ -47,6 +48,8 @@ function CodeEditor({value = '', onChange}: CodeEditorProps) {
 		})
 		codeRef.current = code
 
+		code.setOption('readOnly', disable)
+
 		code.setValue(value)
 		code.setSize(
 			containerRef.current.clientWidth - 10,
@@ -69,6 +72,18 @@ function CodeEditor({value = '', onChange}: CodeEditorProps) {
 			window.removeEventListener('resize', handleContainerResize)
 		}
 	}, [handleContainerResize, createCodeEditor])
+
+	useEffect(() => {
+		if (codeRef.current) {
+			codeRef.current.setOption('readOnly', disable)
+		}
+	}, [disable])
+
+	useEffect(() => {
+		if (codeRef.current) {
+			codeRef.current.setValue(value)
+		}
+	}, [value])
 
 	return (
 		<div

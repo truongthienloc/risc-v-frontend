@@ -1,6 +1,6 @@
 import client from '~/services/axios'
 import apisConfig from '~/configs/apis.json'
-import {IPureAssembleData} from '~/interfaces/data2'
+import { IPureAssembleData } from '~/interfaces/data2'
 
 export const runCode = (code: string) => {
 	return new Promise<IPureAssembleData>(async (resolve, rejects) => {
@@ -12,6 +12,21 @@ export const runCode = (code: string) => {
 			resolve(data)
 		} catch (error) {
 			rejects(error)
+		}
+	})
+}
+
+export const disassemble = (code: string) => {
+	return new Promise<string[]>(async (resolve, reject) => {
+		try {
+			const codeArray = code.split('\n')
+			const res = await client.post(apisConfig.disassembler, {
+				code: codeArray,
+			})
+			const data = res.data as string[]
+			resolve(data.map((value) => value.split('\t')[1]))
+		} catch (error) {
+			reject(error)
 		}
 	})
 }

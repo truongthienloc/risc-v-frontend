@@ -131,34 +131,34 @@ export const defineMode = (CodeMirror: any) => {
 			lineComment: '#',
 		},
 		start: [
-			{regex: /#.*/, token: 'comment'},
+			{ regex: /#.*/, token: 'comment' },
 
 			// Labels
-			{regex: /\w+:/, token: 'tag'},
-			{regex: /[1-9]\d*:/, token: 'tag'},
+			{ regex: /\w+:/, token: 'tag' },
+			{ regex: /[1-9]\d*:/, token: 'tag' },
 			// Reference to local label
-			{regex: /[1-9]\d*[bf]/, token: 'variable-2'},
+			{ regex: /[1-9]\d*[bf]/, token: 'variable-2' },
 
 			// Registers
-			{regex: registers, token: 'variable'},
-			{regex: registerAbiNames, token: 'variable-2'},
+			{ regex: registers, token: 'variable' },
+			{ regex: registerAbiNames, token: 'variable-2' },
 
 			// Integer literal
-			{regex: /-?(?:0|[1-9]\d*|0x[0-9A-Fa-f]+)\b/, token: 'number'},
+			{ regex: /-?(?:0|[1-9]\d*|0x[0-9A-Fa-f]+)\b/, token: 'number' },
 			// String literal
-			{regex: /"(?:[^\\]|\\.)*?(?:"|$)/, token: 'string'},
+			{ regex: /"(?:[^\\]|\\.)*?(?:"|$)/, token: 'string' },
 
-			{regex: relocationFunctionPatterns, token: 'builtin'},
+			{ regex: relocationFunctionPatterns, token: 'builtin' },
 
 			// Directives
-			{regex: directivesPattern, token: 'attribute'},
+			{ regex: directivesPattern, token: 'attribute' },
 			// Instructions
-			{regex: extC, token: 'builtin'},
-			{regex: extFD, token: 'builtin'},
-			{regex: extA, token: 'builtin'},
-			{regex: extM, token: 'builtin'},
-			{regex: baseI, token: 'builtin'},
-			{regex: pseudos, token: 'builtin'},
+			{ regex: extC, token: 'builtin' },
+			{ regex: extFD, token: 'builtin' },
+			{ regex: extA, token: 'builtin' },
+			{ regex: extM, token: 'builtin' },
+			{ regex: baseI, token: 'builtin' },
+			{ regex: pseudos, token: 'builtin' },
 		],
 	})
 

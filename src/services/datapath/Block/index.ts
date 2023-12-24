@@ -1,7 +1,7 @@
 import short from 'short-uuid'
 import Scene from '../Scene'
 import Port from '../Port'
-import {PortType, ILoader, IGraphObject, Point, InputData} from '../types'
+import { PortType, ILoader, IGraphObject, Point, InputData } from '../types'
 
 export default class Block implements IGraphObject, ILoader {
 	private _id: string
@@ -72,10 +72,10 @@ export default class Block implements IGraphObject, ILoader {
 	public destroy(): void {}
 
 	public load(
-		{type = 'once', srcId, value}: InputData,
+		{ type = 'once', srcId, value }: InputData,
 		callback?: (() => void) | undefined
 	): void {
-		const data = {type, value, srcId}
+		const data = { type, value, srcId }
 		this.inputs.set(srcId, data)
 
 		if (this.inputs.size === this.countInputPorts) {
@@ -114,7 +114,7 @@ export default class Block implements IGraphObject, ILoader {
 	}
 
 	public getXY(): Point {
-		return {x: this.x, y: this.y}
+		return { x: this.x, y: this.y }
 	}
 
 	protected createText(

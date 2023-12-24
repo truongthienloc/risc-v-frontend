@@ -2,16 +2,16 @@ import '~/styles/globals.scss'
 import '~/styles/codeEditor.scss'
 import 'codemirror/lib/codemirror.css'
 import 'react-toastify/dist/ReactToastify.css'
-import type {AppPropsWithLayout} from '~/interfaces/app'
+import type { AppPropsWithLayout } from '~/interfaces/app'
 import Head from 'next/head'
 import DefaultLayout from '~/layouts/DefaultLayout'
-import {ToastContainer} from 'react-toastify'
-import {useEffect} from 'react'
-import {wrapper} from '~/services/redux'
-import {PersistGate} from 'redux-persist/integration/react'
-import {useStore, Provider} from 'react-redux'
+import { ToastContainer } from 'react-toastify'
+import { useEffect } from 'react'
+import { wrapper } from '~/services/redux'
+import { PersistGate } from 'redux-persist/integration/react'
+import { useStore, Provider } from 'react-redux'
 
-function App({Component, pageProps}: AppPropsWithLayout) {
+function App({ Component, pageProps }: AppPropsWithLayout) {
 	const store: any = useStore()
 	// const {store, props} = wrapper.useWrappedStore(pageProps)
 	// const {} = props

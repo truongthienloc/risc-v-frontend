@@ -1,5 +1,5 @@
-import {useEffect, useRef} from 'react'
-import {DefaultDatapath, Scene} from '~/services/datapath'
+import { useEffect, useRef } from 'react'
+import { DefaultDatapath, Scene } from '~/services/datapath'
 
 function Datapath() {
 	const datapathRef = useRef<DefaultDatapath>()

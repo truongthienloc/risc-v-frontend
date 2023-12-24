@@ -1,7 +1,7 @@
 import short from 'short-uuid'
 import Scene from '../Scene'
-import {Vector} from '../Helpers'
-import {IGraphObject, Point} from '../types'
+import { Vector } from '../Helpers'
+import { IGraphObject, Point } from '../types'
 
 export interface LineSegmentOptions {
 	color?: string
@@ -51,11 +51,11 @@ export default class LineSegment implements IGraphObject {
 	}
 
 	get sPoint(): Point {
-		return {x: this.fx, y: this.fy}
+		return { x: this.fx, y: this.fy }
 	}
 
 	get dPoint(): Point {
-		return {x: this.lx, y: this.ly}
+		return { x: this.lx, y: this.ly }
 	}
 
 	public destroy(): void {}
@@ -103,7 +103,7 @@ export default class LineSegment implements IGraphObject {
 	}
 
 	public getLength(): number {
-		const {fx, fy, lx, ly} = this
+		const { fx, fy, lx, ly } = this
 		return Math.sqrt((lx - fx) ** 2 + (ly - fy) ** 2)
 	}
 

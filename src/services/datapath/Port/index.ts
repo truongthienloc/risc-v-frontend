@@ -1,5 +1,5 @@
 import short from 'short-uuid'
-import {IGraphObject, Point, ILoader, InputData} from '../types'
+import { IGraphObject, Point, ILoader, InputData } from '../types'
 import Scene from '../Scene'
 
 // export interface PortOptions {
@@ -41,7 +41,7 @@ export default class Port implements IGraphObject {
 	}
 
 	public getXY(): Point {
-		return {x: this.x, y: this.y}
+		return { x: this.x, y: this.y }
 	}
 
 	public addOutput(output: ILoader): void {
@@ -66,7 +66,7 @@ export default class Port implements IGraphObject {
 	}
 
 	public load(data: InputData, callback?: () => void): void {
-		const newData = {...data, srcId: this.id}
+		const newData = { ...data, srcId: this.id }
 		const outputs = this.outputs.entries()
 		for (const [, output] of outputs) {
 			output.load(data)

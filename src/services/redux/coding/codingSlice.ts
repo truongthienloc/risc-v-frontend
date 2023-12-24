@@ -1,6 +1,6 @@
-import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
-import {HYDRATE} from 'next-redux-wrapper'
-import {IAssembleData} from '~/interfaces/data'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { HYDRATE } from 'next-redux-wrapper'
+import { IAssembleData } from '~/interfaces/data'
 // import {runCode} from '~/apis/code'
 // import { HydrateAction } from '..'
 

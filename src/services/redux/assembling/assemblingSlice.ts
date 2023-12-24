@@ -1,6 +1,6 @@
-import {createSlice} from '@reduxjs/toolkit'
-import {HYDRATE} from 'next-redux-wrapper'
-import {IAssembleData} from '~/interfaces/data2'
+import { createSlice } from '@reduxjs/toolkit'
+import { HYDRATE } from 'next-redux-wrapper'
+import { IAssembleData } from '~/interfaces/data2'
 
 export interface AssemblingState {
 	assembleData: IAssembleData | null

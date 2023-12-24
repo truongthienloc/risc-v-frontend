@@ -1,6 +1,6 @@
 import Block from '..'
 import Scene from '../../Scene'
-import {Vector} from '../../Helpers'
+import { Vector } from '../../Helpers'
 import Port from '../../Port'
 
 type BlockPort =
@@ -25,8 +25,8 @@ export default class ALU extends Block {
 
 		const e = (this.height - this.lineRight) / 2
 		const vt = Vector.fromPoints(
-			{x: 0, y: this.height},
-			{x: this.width, y: e + this.lineRight}
+			{ x: 0, y: this.height },
+			{ x: this.width, y: e + this.lineRight }
 		)
 		const vtg = new Vector(0, this.height)
 
