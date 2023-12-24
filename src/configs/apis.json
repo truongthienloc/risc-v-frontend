@@ -1,3 +1,4 @@
 {
-	"core": "/core"
+	"core": "/core",
+	"disassembler": "/disassembler"
 }

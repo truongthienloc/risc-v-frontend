@@ -25,7 +25,10 @@ function NavItem({ href, value, current }: NavItemProps) {
 	return (
 		<Link
 			className={clsx('hover:text-[#1976d2]', {
-				'text-[#1976d2]': href === current,
+				'text-[#1976d2]':
+					current &&
+					current.length > 1 &&
+					href.split('/')[1] === current.split('/')[1],
 			})}
 			href={href}>
 			{value}
