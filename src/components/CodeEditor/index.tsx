@@ -77,13 +77,13 @@ function CodeEditor({ value = '', onChange, disable = false }: CodeEditorProps) 
 		if (codeRef.current) {
 			codeRef.current.setOption('readOnly', disable)
 		}
-	}, [disable]);
+	}, [disable])
 
 	useEffect(() => {
 		if (codeRef.current) {
 			codeRef.current.setValue(value)
 		}
-	}, [value]);
+	}, [value])
 
 	return (
 		<div
