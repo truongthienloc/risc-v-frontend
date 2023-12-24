@@ -1,0 +1,3 @@
+{
+    "ignorePatterns": ["src/services/datapath/**.ts", "src/services/codemirror/**.ts"]
+}

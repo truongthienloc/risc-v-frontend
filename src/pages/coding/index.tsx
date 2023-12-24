@@ -1,25 +1,25 @@
-import {Button, Tabs, Tab, styled, OutlinedInput} from '@mui/material'
-import TabPanel, {createProps} from '~/components/TabPanel'
+import { Button, Tabs, Tab, styled, OutlinedInput } from '@mui/material'
+import TabPanel, { createProps } from '~/components/TabPanel'
 import Link from 'next/link'
-import {useState} from 'react'
+import { useState } from 'react'
 import {
 	DisplayDMemTable,
 	DisplayInstructionTable,
 	DisplayRegisterTable,
 } from '~/components/DisplayDataTable'
 import CodeEditor from '~/components/CodeEditor'
-import {toast} from 'react-toastify'
-import {useSelector, useDispatch} from 'react-redux'
-import {codeSelector} from '~/services/redux/coding/codingSelector'
-import {codingActions} from '~/services/redux/coding/codingSlice'
-import {assembleDataSelector} from '~/services/redux/assembling/assemblingSelector'
-import {assemblingActions} from '~/services/redux/assembling/assemblingSlice'
+import { toast } from 'react-toastify'
+import { useSelector, useDispatch } from 'react-redux'
+import { codeSelector } from '~/services/redux/coding/codingSelector'
+import { codingActions } from '~/services/redux/coding/codingSlice'
+import { assembleDataSelector } from '~/services/redux/assembling/assemblingSelector'
+import { assemblingActions } from '~/services/redux/assembling/assemblingSlice'
 import * as codeAPI from '~/apis/code'
 import {
 	convertPure2Standard,
 	convertRegisters2TwinRegisters,
 } from '~/helpers/assembleDataFormatter'
-import {createDefaultRegisterData} from '~/helpers/registerData'
+import { createDefaultRegisterData } from '~/helpers/registerData'
 
 // defaultData is used when client don't run code or click reset
 const defaultData = convertRegisters2TwinRegisters(createDefaultRegisterData())
@@ -61,7 +61,9 @@ function CodingPage() {
 				<Button variant='outlined'>
 					<Link href='/coding/schematic-view'>Schematic view</Link>
 				</Button>
-				<Button variant='outlined'>Disassembly</Button>
+				<Button variant='outlined'>
+					<Link href='/coding/disassembly'>Disassembly</Link>
+				</Button>
 			</div>
 
 			<div className='flex-1 flex flex-row gap-2'>
@@ -94,7 +96,7 @@ function CodingPage() {
 					</TabPanel>
 					<TabPanel index={1} value={tabIndex}>
 						<DisplayDMemTable
-							sx={{maxHeight: 450}}
+							sx={{ maxHeight: 450 }}
 							data={
 								(assembleData &&
 									assembleData.Data_memory[
@@ -106,7 +108,7 @@ function CodingPage() {
 					</TabPanel>
 					<TabPanel index={2} value={tabIndex}>
 						<DisplayInstructionTable
-							sx={{maxHeight: 450}}
+							sx={{ maxHeight: 450 }}
 							data={
 								(assembleData &&
 									assembleData.Instruction_memory) ||

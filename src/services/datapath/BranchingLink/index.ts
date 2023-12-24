@@ -1,8 +1,8 @@
 import short from 'short-uuid'
-import {IGraphObject} from '../types'
-import Link, {LinkOptions} from '../Link'
+import { IGraphObject } from '../types'
+import Link, { LinkOptions } from '../Link'
 import Port from '../Port'
-import VPort, {PortOptions} from '../Port/VPort'
+import VPort, { PortOptions } from '../Port/VPort'
 
 export default class BranchingLink implements IGraphObject {
 	// private srcPort: Port;

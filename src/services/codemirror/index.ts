@@ -1,1 +1,1 @@
-export {defineMode} from './riscvMode'
+export { defineMode } from './riscvMode'

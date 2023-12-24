@@ -1,7 +1,7 @@
 import Block from '..'
 import Scene from '../../Scene'
 import Port from '../../Port'
-import {Vector} from '../../Helpers'
+import { Vector } from '../../Helpers'
 
 type BlockPort = 'input-0' | 'input-1' | 'input-control' | 'output'
 
@@ -26,8 +26,8 @@ export default class Mux extends Block {
 		if (portBottom) {
 			const e = (this.height - this.rightHeight) / 2
 			const vt = Vector.fromPoints(
-				{x: 0, y: this.height},
-				{x: this.width, y: e + this.rightHeight}
+				{ x: 0, y: this.height },
+				{ x: this.width, y: e + this.rightHeight }
 			)
 			const vtg = new Vector(0, this.height)
 
@@ -38,7 +38,7 @@ export default class Mux extends Block {
 			this.createPort(point.x, point.y, 'input', 'aqua', 'input-control')
 		} else {
 			const e = (this.height - this.rightHeight) / 2
-			const vt = Vector.fromPoints({x: 0, y: 0}, {x: this.width, y: e})
+			const vt = Vector.fromPoints({ x: 0, y: 0 }, { x: this.width, y: e })
 			const vtg = new Vector(0, 0)
 
 			const lengthVT = vt.length

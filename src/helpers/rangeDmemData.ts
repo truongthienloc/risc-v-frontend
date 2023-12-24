@@ -1,4 +1,4 @@
-import {IData} from '~/interfaces/data'
+import { IData } from '~/interfaces/data'
 
 const LENGTH_OF_DMEM = 10
 

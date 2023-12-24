@@ -5,8 +5,8 @@ import {
 	ThunkAction,
 	Action,
 } from '@reduxjs/toolkit'
-import {createWrapper, HYDRATE} from 'next-redux-wrapper'
-import {persistReducer, persistStore, PersistConfig} from 'redux-persist'
+import { createWrapper, HYDRATE } from 'next-redux-wrapper'
+import { persistReducer, persistStore, PersistConfig } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import codingSlice from './coding/codingSlice'
 import assemblingSlice from './assembling/assemblingSlice'

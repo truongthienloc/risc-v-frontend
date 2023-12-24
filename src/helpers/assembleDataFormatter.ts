@@ -1,4 +1,4 @@
-import {IData, ITwinRegister} from '~/interfaces/data'
+import { IData, ITwinRegister } from '~/interfaces/data'
 import {
 	IPureAssembleData,
 	IRegisters,
@@ -11,7 +11,7 @@ export function convertString2IData(string: string): IData {
 	const splitName = string.split(':')
 	const name = splitName[0].trim()
 	const value = splitName[1].split(' ')[0].trim()
-	return {name, value}
+	return { name, value }
 }
 
 export function convertPureIMem2Standard(pure: IInsMemory): IData[] {
@@ -56,8 +56,8 @@ export function convertRegisters2TwinRegisters(registers: IData[]): ITwinRegiste
 		const element2 = registers[index + 1]
 
 		res.push({
-			register1: {...element1},
-			register2: {...element2},
+			register1: { ...element1 },
+			register2: { ...element2 },
 		})
 	}
 

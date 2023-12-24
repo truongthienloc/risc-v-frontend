@@ -1,11 +1,11 @@
 import short from 'short-uuid'
 import Port from '../Port'
 import VPort from '../Port/VPort'
-import {IGraphObject, Point, ILoader} from '../types'
-import LineSegment, {LineSegmentOptions} from '../LineSegment'
+import { IGraphObject, Point, ILoader } from '../types'
+import LineSegment, { LineSegmentOptions } from '../LineSegment'
 import Scene from '../Scene'
 
-import {Vector} from '../Helpers'
+import { Vector } from '../Helpers'
 
 interface TextProps {
 	text: string
@@ -42,7 +42,7 @@ export default class Link implements IGraphObject, ILoader {
 		context: CanvasRenderingContext2D,
 		srcPort: Port,
 		desPort: Port,
-		options: LinkOptions = {color: 'black', width: 2, noArrow: undefined}
+		options: LinkOptions = { color: 'black', width: 2, noArrow: undefined }
 	) {
 		this._id = short.generate()
 		this.srcPort = srcPort
@@ -93,7 +93,7 @@ export default class Link implements IGraphObject, ILoader {
 	}
 
 	public addBreakpoint(x: number, y: number): void {
-		this.breakpoints.push({x, y})
+		this.breakpoints.push({ x, y })
 		this.clearAllLineSegments()
 
 		let startPoint = this.getStartPoint()
@@ -168,7 +168,7 @@ export default class Link implements IGraphObject, ILoader {
 		}
 		// console.log(this.options.firstText);
 
-		const {text, color, spacingX, spacingY} = this.options.firstText
+		const { text, color, spacingX, spacingY } = this.options.firstText
 		const position = this.getStartPoint()
 		const textX = (position.x + (spacingX ?? 0)) * Scene.CELL
 		const textY = (position.y + (spacingY ?? 0)) * Scene.CELL
@@ -203,7 +203,7 @@ export default class Link implements IGraphObject, ILoader {
 	private drawArrow(angle: number = 0): void {
 		const endPoint = this.getEndPoint()
 
-		const {x: xt, y: yt} = endPoint
+		const { x: xt, y: yt } = endPoint
 		const x = xt * Scene.CELL
 		const y = yt * Scene.CELL
 		const size = 0.65 * Scene.CELL // Độ dài một cạnh của tam giác
