@@ -57,7 +57,10 @@ function DisassemblyPage() {
 						<h2 className='text-xl text-left'>
 							Input your binary machine code here:
 						</h2>
-						<Button className='h-fit' variant='outlined' onClick={handleDisassembleClick}>
+						<Button
+							className='h-fit'
+							variant='outlined'
+							onClick={handleDisassembleClick}>
 							Disassemble
 						</Button>
 					</div>
