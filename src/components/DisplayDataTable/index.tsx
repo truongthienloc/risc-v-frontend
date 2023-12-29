@@ -12,7 +12,7 @@ import {
 	SxProps,
 	Theme,
 } from '@mui/material'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useState, useEffect } from 'react'
 import { IData, ITwinRegister } from '~/interfaces/data'
 import { toast } from 'react-toastify'
 import clsx from 'clsx'
@@ -50,15 +50,24 @@ interface DisplayRegistersTableProps {
 }
 
 export function DisplayDMemTable({ data, sx }: DisplayDataTableProps) {
+	// console.log('data: ', data);
+
 	const [input, setInput] = useState('0x00000000')
+	const [start, setStart] = useState(input)
 	const [displayedData, setDisplayedData] = useState(
-		createRangeDmemData(data || [], '0x00000000')
+		createRangeDmemData(data || [], start)
 	)
 	const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
 		setInput(e.target.value)
 	}
 
 	const handleButtonClick = () => {
+		if (input.startsWith('0x')) {
+			setStart(input)
+		}
+	}
+
+	useEffect(() => {
 		// calculate start address
 		const dec = parseInt(input, 16)
 		const startDec = Math.floor(dec / 40) * 40
@@ -67,7 +76,9 @@ export function DisplayDMemTable({ data, sx }: DisplayDataTableProps) {
 		const dMemData = createRangeDmemData(data || [], startHex)
 
 		setDisplayedData(dMemData)
-	}
+	}, [start, data])
+
+	console.log('displayedData: ', displayedData)
 
 	return (
 		<>
@@ -103,7 +114,7 @@ export function DisplayDMemTable({ data, sx }: DisplayDataTableProps) {
 									key={value.name}
 									sx={
 										value.value !== '0x00000000'
-											? { backgroundColor: 'FFEED9' }
+											? { backgroundColor: '#fff177' }
 											: {}
 									}>
 									<TableCell>{value.name}</TableCell>
