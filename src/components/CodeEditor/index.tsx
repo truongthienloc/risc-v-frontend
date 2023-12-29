@@ -79,16 +79,17 @@ function CodeEditor({ value = '', onChange, disable = false }: CodeEditorProps) 
 		}
 	}, [disable])
 
-	useEffect(() => {
-		if (codeRef.current) {
-			codeRef.current.setValue(value)
-		}
-	}, [value])
+	// useEffect(() => {
+	// 	if (codeRef.current) {
+	// 		codeRef.current.setValue(value)
+	// 	}
+	// }, [value])
 
 	return (
 		<div
 			ref={containerRef}
-			className='flex-1 min-w-[250px] h-full min-h-[300px] text-base'>
+			className='flex-1 min-w-[250px] h-full min-h-[300px] text-base'
+			onResize={handleContainerResize}>
 			<textarea ref={textareaRef} name='code-editor' id='code-editor'></textarea>
 		</div>
 	)

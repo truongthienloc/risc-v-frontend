@@ -12,9 +12,10 @@ import {
 	SxProps,
 	Theme,
 } from '@mui/material'
-import { ChangeEvent, useState } from 'react'
-import { IAssembleData, IData, ITwinRegister } from '~/interfaces/data'
+import { ChangeEvent, useState, useEffect } from 'react'
+import { IData, ITwinRegister } from '~/interfaces/data'
 import { toast } from 'react-toastify'
+import clsx from 'clsx'
 import { createRangeDmemData } from '~/helpers/rangeDmemData'
 
 const styles: { [key: string]: SxProps<Theme> } = {
@@ -38,33 +39,46 @@ const InputAddress = styled(OutlinedInput)`
 
 interface DisplayDataTableProps {
 	data?: IData[]
+	prev?: IData[]
 	sx?: SxProps<Theme>
 }
 
 interface DisplayRegistersTableProps {
 	data?: ITwinRegister[]
+	prev?: ITwinRegister[]
 	sx?: SxProps<Theme>
 }
 
 export function DisplayDMemTable({ data, sx }: DisplayDataTableProps) {
+	// console.log('data: ', data);
+
 	const [input, setInput] = useState('0x00000000')
+	const [start, setStart] = useState(input)
 	const [displayedData, setDisplayedData] = useState(
-		createRangeDmemData(data || [], '0x00000000')
+		createRangeDmemData(data || [], start)
 	)
 	const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
 		setInput(e.target.value)
 	}
 
 	const handleButtonClick = () => {
+		if (input.startsWith('0x')) {
+			setStart(input)
+		}
+	}
+
+	useEffect(() => {
 		// calculate start address
-		const dec = parseInt(input, 16)
+		const dec = parseInt(start, 16)
 		const startDec = Math.floor(dec / 40) * 40
 		const startHex = startDec.toString(16)
 
 		const dMemData = createRangeDmemData(data || [], startHex)
 
 		setDisplayedData(dMemData)
-	}
+	}, [start, data])
+
+	console.log('displayedData: ', displayedData)
 
 	return (
 		<>
@@ -100,7 +114,7 @@ export function DisplayDMemTable({ data, sx }: DisplayDataTableProps) {
 									key={value.name}
 									sx={
 										value.value !== '0x00000000'
-											? { backgroundColor: 'FFEED9' }
+											? { backgroundColor: '#fff177' }
 											: {}
 									}>
 									<TableCell>{value.name}</TableCell>
@@ -117,14 +131,33 @@ export function DisplayDMemTable({ data, sx }: DisplayDataTableProps) {
 	)
 }
 
-export function DisplayRegisterTable({ data, sx }: DisplayRegistersTableProps) {
+function compareTwinRegister(prev: ITwinRegister, data: ITwinRegister): boolean[] {
+	const res = []
+	if (!prev) {
+		const num1 = parseInt(data.register1.value, 16)
+		const num2 = parseInt(data.register2.value, 16)
+
+		res.push(num1 !== 0)
+		res.push(num2 !== 0)
+		return res
+	}
+
+	res.push(prev.register1.value !== data.register1.value)
+	res.push(prev.register2.value !== data.register2.value)
+	return res
+}
+
+export function DisplayRegisterTable({
+	data = [],
+	sx,
+	prev = [],
+}: DisplayRegistersTableProps) {
 	return (
 		<TableContainer component={Paper} sx={sx}>
 			<Table sx={styles.table} stickyHeader>
 				<TableHead>
 					<TableRow>
 						<TableCell align='center'>Register</TableCell>
-						{/* <TableCell align='center'>Dec</TableCell> */}
 						<TableCell align='center'>Hex</TableCell>
 						<TableCell align='center'>Register</TableCell>
 						<TableCell align='center'>Hex</TableCell>
@@ -133,16 +166,47 @@ export function DisplayRegisterTable({ data, sx }: DisplayRegistersTableProps) {
 				<TableBody>
 					{data &&
 						data.length > 0 &&
-						data.map((value) => (
-							<TableRow
-								key={value.register1.name + value.register2.name}>
-								<TableCell>{value.register1.name}</TableCell>
-								{/* <TableCell>{parseInt(value.value, 16)}</TableCell> */}
-								<TableCell>{value.register1.value}</TableCell>
-								<TableCell>{value.register2.name}</TableCell>
-								<TableCell>{value.register2.value}</TableCell>
-							</TableRow>
-						))}
+						data.map((value, index) => {
+							const compare = compareTwinRegister(prev[index], value)
+							return (
+								<TableRow
+									key={
+										value.register1.name +
+										value.register2.name
+									}>
+									<TableCell
+										className={clsx({
+											'bg-highlight': compare[0],
+										})}>
+										{value.register1.name}
+									</TableCell>
+									<TableCell
+										className={clsx({
+											'bg-highlight': compare[0],
+										})}>
+										{value.register1.value}
+									</TableCell>
+									{value.register2.name && (
+										<>
+											<TableCell
+												className={clsx({
+													'bg-highlight':
+														compare[1],
+												})}>
+												{value.register2.name}
+											</TableCell>
+											<TableCell
+												className={clsx({
+													'bg-highlight':
+														compare[1],
+												})}>
+												{value.register2.value}
+											</TableCell>
+										</>
+									)}
+								</TableRow>
+							)
+						})}
 				</TableBody>
 			</Table>
 		</TableContainer>

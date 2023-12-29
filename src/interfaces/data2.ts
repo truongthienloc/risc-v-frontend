@@ -31,7 +31,7 @@ export interface IStep<T> {
 
 export type ISteps<T> = IStep<T>[]
 
-export interface IAssembleData {
+export interface IStepAssembleData {
 	Registers: ISteps<ITwinRegister[]>
 	Instruction_memory: IData[]
 	Data_memory: ISteps<IData[]>

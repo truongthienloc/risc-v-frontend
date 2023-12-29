@@ -2,6 +2,22 @@ import { IData } from '~/interfaces/data'
 
 const LENGTH_OF_DMEM = 10
 
+export function convertBinary2Hex(binary: string): string {
+	// Validate if the input is a valid binary string
+	if (!/^[01]+$/.test(binary)) {
+		throw new Error('Invalid binary input')
+	}
+
+	// Convert binary to decimal
+	const decimalValue = parseInt(binary, 2)
+
+	// Convert decimal to hexadecimal with '0x' prefix and leading zeros
+	const hexValue =
+		'0x' + decimalValue.toString(16).padStart(Math.ceil(binary.length / 4), '0')
+
+	return hexValue
+}
+
 export function createRangeDmemData(data: IData[], start: string): IData[] {
 	const startDec = parseInt(start, 16)
 	const res = []
@@ -9,10 +25,12 @@ export function createRangeDmemData(data: IData[], start: string): IData[] {
 		const addressDec = startDec + 4 * i
 		const addressHex = '0x' + addressDec.toString(16).padStart(8, '0')
 
-		const DMemData = data.find((value) => value.name === addressHex)
+		const DMemData = data.find(
+			(value) => convertBinary2Hex(value.name) === addressHex
+		)
 		let value = '0x00000000'
 		if (DMemData) {
-			value = DMemData.value
+			value = convertBinary2Hex(DMemData.value)
 		}
 
 		res.push({

@@ -3,7 +3,7 @@ import {
 	IPureAssembleData,
 	IRegisters,
 	ISteps,
-	IAssembleData,
+	IStepAssembleData,
 	IInsMemory,
 } from '~/interfaces/data2'
 
@@ -92,7 +92,7 @@ function convertPure2Step(pure: IRegisters): ISteps<IData[]> {
 	return stepResult
 }
 
-export function convertPure2Standard(pure: IPureAssembleData): IAssembleData {
+export function convertPure2Standard(pure: IPureAssembleData): IStepAssembleData {
 	const stepRegisters = convertPure2Step(pure.Registers)
 	const stepDMems = convertPure2Step(pure.Data_memory)
 	const stepGraphics = convertPure2Step(pure.Graphic)
