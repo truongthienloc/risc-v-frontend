@@ -31,7 +31,7 @@ function CodingPage() {
 	const [prevData, setPrevData] = useState<IAssembleData | null>(null)
 	const [currData, setCurrData] = useState<IAssembleData | null>(null)
 	const [typeCompile, setTypeCompile] = useState<'default' | 'step'>('default')
-	const stepIndex = useRef(-1);
+	const stepIndex = useRef(-1)
 	const [stepCode, setStepCode] = useState<string[]>([])
 	const code = useSelector(codeSelector)
 	const assembleData = useSelector(assembleDataSelector)
@@ -96,22 +96,22 @@ function CodingPage() {
 					success: 'Biên dịch thành công',
 					error: 'Biên dịch thất bại',
 				})
-	
+
 				const { standardData, disData } = data
-	
+
 				dispatch(assemblingActions.setAssembleData(standardData))
-	
+
 				setStepCode(disData)
 				setTypeCompile('step')
 				stepIndex.current = 0
-	
+
 				setPrevData({
 					Registers: defaultData,
 					Data_memory: [],
 					Instruction_memory: standardData.Instruction_memory,
 					Graphic: [],
 				})
-	
+
 				setCurrData({
 					Registers: standardData.Registers[0].data,
 					Data_memory: standardData.Data_memory[0].data,
@@ -121,9 +121,7 @@ function CodingPage() {
 			} catch (error) {
 				console.error(error)
 			}
-
-		}
-		else if (typeCompile === 'step') {
+		} else if (typeCompile === 'step') {
 			if (!assembleData || !currData || !prevData) {
 				return
 			}
@@ -136,14 +134,13 @@ function CodingPage() {
 					Registers: currData.Registers,
 					Data_memory: currData.Data_memory,
 				})
-	
+
 				setCurrData({
 					...currData,
 					Registers: assembleData.Registers[index].data,
 					Data_memory: assembleData.Data_memory[index].data,
 				})
-			}
-			else if (index === assembleData.length) {
+			} else if (index === assembleData.length) {
 				setPrevData({
 					...prevData,
 					Registers: currData.Registers,
@@ -156,20 +153,20 @@ function CodingPage() {
 	const pc = useMemo(() => {
 		if (!currData || !assembleData) {
 			return -1
-		} 
+		}
 		if (stepIndex.current === assembleData.length) {
 			return (stepIndex.current + 10) * 4
 		}
-		const pcValue = currData.Registers.find((value) =>
-			value.register1.name.includes('pc')
-		)?.register1.value || '0x00000'
+		const pcValue =
+			currData.Registers.find((value) => value.register1.name.includes('pc'))
+				?.register1.value || '0x00000'
 
 		return parseInt(pcValue, 16)
 	}, [currData, stepIndex.current, prevData])
 
 	// useEffect(() => {
 	// 	console.log('currData: ', currData);
-		
+
 	// }, [currData]);
 
 	return (
