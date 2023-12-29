@@ -69,7 +69,7 @@ export function DisplayDMemTable({ data, sx }: DisplayDataTableProps) {
 
 	useEffect(() => {
 		// calculate start address
-		const dec = parseInt(input, 16)
+		const dec = parseInt(start, 16)
 		const startDec = Math.floor(dec / 40) * 40
 		const startHex = startDec.toString(16)
 
