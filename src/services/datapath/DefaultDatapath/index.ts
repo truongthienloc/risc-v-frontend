@@ -20,6 +20,7 @@ import Port from '../Port'
 import Scene from '../Scene'
 
 import { HEAVY_LINE_COLOR, LINE_COLOR } from '../constants'
+import { InputData, InputValue } from '../types'
 
 export default class DefaultDatapath {
 	private scene: Scene
@@ -66,9 +67,16 @@ export default class DefaultDatapath {
 		// this.scene.start();
 	}
 
-	public loadInstruction(data: any): void {
+	public loadInstruction(data: InputValue[]): void {
+		// const testData = [...data]
+		// testData[13] = {name: '13', value: 'brown'}
+		const loadingData = { type: 'once', srcId: this.pc.id, value: data } as InputData
 		const startPort = this.pc.getPort('output')
-		startPort.load({ type: 'once', srcId: this.pc.id, value: data })
+		startPort.load(loadingData)
+		for (const constant of this.constants) {
+			const port = constant.getPort("output")
+			port.load(loadingData)
+		}
 		this.scene.start()
 	}
 
@@ -228,8 +236,6 @@ export default class DefaultDatapath {
 		const inMux0_1 = this.muxs[0].getPort('input-1')
 		const inMux0_control = this.muxs[0].getPort('input-control')
 		const outMux0 = this.muxs[0].getPort('output')
-		console.log('outMux0: ', this.muxs[0])
-
 		outMux0.name = '6'
 		const inMux1_0 = this.muxs[1].getPort('input-0')
 		const inMux1_1 = this.muxs[1].getPort('input-1')
@@ -277,6 +283,7 @@ export default class DefaultDatapath {
 		const con0 = this.constants[2].getPort('output')
 		const con1 = this.constants[1].getPort('output')
 
+		con4.name = '4'
 		con0.name = '13'
 		con1.name = '14'
 

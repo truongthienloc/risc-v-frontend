@@ -76,6 +76,8 @@ export default class Port implements IGraphObject {
 			if (this.name === 'control') {
 				newData.color = 'blue'
 			}
+			console.log('Color: ', newData.color);
+			
 		}
 		const outputs = this.outputs.entries()
 		for (const [, output] of outputs) {

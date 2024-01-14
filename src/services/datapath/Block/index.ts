@@ -17,9 +17,9 @@ export default class Block implements IGraphObject, ILoader {
 	protected enableRenderDefault: boolean = true
 
 	private ports: Map<string, Port> = new Map()
-	private inputs: Map<string, InputData> = new Map()
+	protected inputs: Map<string, InputData> = new Map()
 	private countInputPorts: number = 0
-	private outputs: Map<string, Port> = new Map()
+	protected outputs: Map<string, Port> = new Map()
 
 	constructor(
 		context: CanvasRenderingContext2D,
@@ -79,6 +79,7 @@ export default class Block implements IGraphObject, ILoader {
 
 		this.ports.clear()
 		this.outputs.clear()
+		this.inputs.clear()
 	}
 
 	public load(

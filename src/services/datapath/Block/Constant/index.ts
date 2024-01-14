@@ -1,5 +1,6 @@
 import Block from '..'
 import Port from '../../Port'
+import { InputData } from '../../types'
 
 export default class Constant extends Block {
 	private value: number

@@ -1,9 +1,12 @@
 import Block from '..'
 import Port from '../../Port'
+import { InputData } from '../../types'
 
 type BlockPort = 'input' | 'output'
 
 export default class PC extends Block {
+	private finishSignalCallbacks: Function[] = []
+
 	constructor(context: CanvasRenderingContext2D, x: number, y: number) {
 		super(context, x, y, 2, 5, 'white')
 
@@ -24,5 +27,13 @@ export default class PC extends Block {
 
 	public getPort(id: BlockPort): Port {
 		return super.getPort(id) as Port
+	}
+
+	public finishSignalConnect(callback: () => void): void {
+		this.finishSignalCallbacks.push(callback)
+	}
+
+	public load(data: InputData): void {
+		this.finishSignalCallbacks.forEach(callback => callback())
 	}
 }
