@@ -1,7 +1,7 @@
 import short from 'short-uuid'
 import Port from '../Port'
 import VPort from '../Port/VPort'
-import { IGraphObject, Point, ILoader } from '../types'
+import { IGraphObject, Point, ILoader, InputData } from '../types'
 import LineSegment, { LineSegmentOptions } from '../LineSegment'
 import Scene from '../Scene'
 
@@ -33,6 +33,7 @@ export default class Link implements IGraphObject, ILoader {
 	private breakpoints: Point[] = []
 
 	private active: boolean = false
+	private activeColor: string = 'red'
 	private indexLineLoading: number = 0
 	private data: any
 
@@ -128,12 +129,15 @@ export default class Link implements IGraphObject, ILoader {
 		)
 	}
 
-	public load(data: any, callback?: () => void): void {
+	public load(data: InputData, callback?: () => void): void {
 		this.data = data
 		this.indexLineLoading = 1
+		if (data.color) {
+			this.activeColor = data.color
+		}
 		this.active = false
 		const firstLine = this.lineSegments.get(1)
-		firstLine?.load(this.lsFinishedLoading.bind(this))
+		firstLine?.load(data, this.lsFinishedLoading.bind(this))
 		if (callback) {
 			callback()
 		}
@@ -151,7 +155,7 @@ export default class Link implements IGraphObject, ILoader {
 
 		const lineSegment = this.lineSegments.get(this.indexLineLoading)
 
-		lineSegment?.load(this.lsFinishedLoading.bind(this))
+		lineSegment?.load(this.data, this.lsFinishedLoading.bind(this))
 	}
 
 	private clearAllLineSegments(): void {
@@ -223,7 +227,7 @@ export default class Link implements IGraphObject, ILoader {
 		this.context.lineTo(x - size / 2, y + height / 2)
 		this.context.lineTo(x + size / 2, y + height / 2)
 		this.context.closePath()
-		this.context.fillStyle = this.active ? 'red' : this.options.color || 'black'
+		this.context.fillStyle = this.active ? this.activeColor : this.options.color || 'black'
 		this.context.fill()
 
 		this.context.resetTransform()

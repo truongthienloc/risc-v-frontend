@@ -50,7 +50,7 @@ function CodingPage() {
 				error: 'Biên dịch thất bại',
 			})
 			const standardData = convertPure2Standard(data)
-			console.log('standard-data: ', standardData)
+			// console.log('standard-data: ', standardData)
 
 			dispatch(assemblingActions.setAssembleData(standardData))
 			setPrevData({

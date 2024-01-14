@@ -56,6 +56,11 @@ export default class BranchingLink implements IGraphObject {
 		return _links
 	}
 
+	public clearAll(): void {
+		this.clearSubLinks()
+		this.clearVPorts()
+	}
+
 	private clearVPorts(): void {
 		this.VPorts.clear()
 	}

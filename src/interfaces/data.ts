@@ -12,7 +12,7 @@ export interface IAssembleData {
 	Registers: ITwinRegister[]
 	Instruction_memory: IData[]
 	Data_memory: IData[]
-	Graphic: { [key: number]: string }
+	Graphic: IData[]
 }
 
 export interface IPureAssembleData {

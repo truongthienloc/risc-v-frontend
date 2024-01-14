@@ -69,7 +69,17 @@ export default class Block implements IGraphObject, ILoader {
 		}
 	}
 
-	public destroy(): void {}
+	public destroy(): void {
+		for (const [, port] of this.ports.entries()) {
+			port.destroy()
+		}
+		for (const [, output] of this.outputs.entries()) {
+			output.destroy()
+		}
+
+		this.ports.clear()
+		this.outputs.clear()
+	}
 
 	public load(
 		{ type = 'once', srcId, value }: InputData,
@@ -96,9 +106,10 @@ export default class Block implements IGraphObject, ILoader {
 		yt: number,
 		type: PortType,
 		color?: string,
+		id?: string,
 		name?: string
 	): Port {
-		const _port = new Port(this.context, this.x + xt, this.y + yt, color, name)
+		const _port = new Port(this.context, this.x + xt, this.y + yt, color, id, name)
 		this.ports.set(_port.id, _port)
 		if (type === 'input') {
 			this.countInputPorts++

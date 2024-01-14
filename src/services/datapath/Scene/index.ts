@@ -33,6 +33,7 @@ export default class Scene {
 	static CELL = 13
 	static FONT_SIZE = (Scene.CELL * 4) / 5
 
+	private running: boolean = false
 	private blocks: Map<string, Block> = new Map()
 	private links: Map<string, Link> = new Map()
 	private branchingLinks: Map<string, BranchingLink> = new Map()
@@ -205,7 +206,27 @@ export default class Scene {
 		return _dataGen
 	}
 
-	public start(t: number = 0): void {
+	public start(): void {
+		if (this.running) {
+			return
+		}
+
+		this.running = true
+		this.loop(0)
+	}
+
+	public stop(): void {
+		if (!this.running) {
+			return 
+		}
+
+		this.running = false
+	}
+
+	private loop(t: number = 0): void {
+		if (!this.running) {
+			return
+		}
 		const now = performance.now()
 		// console.log("t: ", t);
 
@@ -214,7 +235,7 @@ export default class Scene {
 		}
 		const dt = now - this.lastTime
 		this.render(dt)
-		requestAnimationFrame(this.start.bind(this))
+		requestAnimationFrame(this.loop.bind(this))
 	}
 
 	public render(dt: number): void {
@@ -245,6 +266,7 @@ export default class Scene {
 		}
 
 		this.blocks.clear()
+		this.lastTime = 0
 	}
 
 	private renderMode(): void {

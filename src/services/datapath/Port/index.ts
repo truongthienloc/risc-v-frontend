@@ -12,6 +12,7 @@ export default class Port implements IGraphObject {
 	protected x: number
 	protected y: number
 	protected color: string
+	public name?: string
 
 	protected context: CanvasRenderingContext2D
 
@@ -24,9 +25,11 @@ export default class Port implements IGraphObject {
 		x: number,
 		y: number,
 		color?: string,
-		id?: string
+		id?: string,
+		name?: string
 	) {
 		this._id = id ?? short.generate()
+		this.name = name
 		this.x = x
 		this.y = y
 		this.color = color || 'black'
@@ -67,13 +70,24 @@ export default class Port implements IGraphObject {
 
 	public load(data: InputData, callback?: () => void): void {
 		const newData = { ...data, srcId: this.id }
+		if (this.name) {
+			newData.srcName = this.name
+			newData.color = data.value.find(value => value.name === this.name)?.value
+			if (this.name === 'control') {
+				newData.color = 'blue'
+			}
+		}
 		const outputs = this.outputs.entries()
 		for (const [, output] of outputs) {
-			output.load(data)
+			output.load(newData)
 		}
 
 		if (callback) {
 			callback()
 		}
+	}
+
+	public destroy(): void {
+		this.outputs.clear()
 	}
 }

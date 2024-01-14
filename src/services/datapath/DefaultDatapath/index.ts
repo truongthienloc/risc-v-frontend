@@ -59,14 +59,30 @@ export default class DefaultDatapath {
 		this.scene.useGridMode()
 		this.scene.render(0)
 
-		const port = this.iMem.getPort('output-Instruction')
+		// const port = this.iMem.getPort('output-Instruction')
 
 		// port.load({type: 'once', srcId: 'developer', value: 'Hello'});
 
 		// this.scene.start();
 	}
 
-	public loadInstruction(data: string): void {}
+	public loadInstruction(data: any): void {
+		const startPort = this.pc.getPort('output')
+		startPort.load({ type: 'once', srcId: this.pc.id, value: data })
+		this.scene.start()
+	}
+
+	public resetState(): void {
+		this.scene.stop()
+		this.scene.destroy()
+		this.links.clearAll()
+		this.adds = []
+		this.muxs = []
+		this.constants = []
+		this.createBlocks()
+		this.createLinks()
+		this.scene.render(0)
+	}
 
 	private createBlocks(): void {
 		this.constants.push(this.scene.createConstant(this.X + 8, this.Y + 10, 4))
@@ -124,6 +140,9 @@ export default class DefaultDatapath {
 		const inImem = this.iMem.getPort('input-ReadAddress')
 		const outImem = this.iMem.getPort('output-Instruction')
 
+		outPC.name = '0'
+		outImem.name = '1'
+
 		// Register
 		const inReg1 = this.register.getPort('input-ReadReg-1')
 		const inReg2 = this.register.getPort('input-ReadReg-2')
@@ -132,6 +151,9 @@ export default class DefaultDatapath {
 		const inReg_control = this.register.getPort('input-control-Write')
 		const outReg1 = this.register.getPort('output-ReadData-1')
 		const outReg2 = this.register.getPort('output-ReadData-2')
+
+		outReg1.name = '2'
+		outReg2.name = '2'
 
 		// Control
 		const inControl = this.control.getPort('input')
@@ -149,14 +171,32 @@ export default class DefaultDatapath {
 		const outConALUSrc = this.control.getPort('output-ALUSrc')
 		const outConRegWrite = this.control.getPort('output-RegWrite')
 
+		outConJal.name = 'control'
+		outConJalr.name = 'control'
+		outConBranch.name = 'control'
+		outConAuipcOrLui.name = 'control'
+		outConWb.name = 'control'
+		outConSlt.name = 'control'
+		outConMemtoRegister.name = 'control'
+		outConALUOp.name = 'control'
+		outConUnsigned.name = 'control'
+		outConMemRead.name = 'control'
+		outConMemWrite.name = 'control'
+		outConALUSrc.name = 'control'
+		outConRegWrite.name = 'control'
+
 		// ImmGen
 		const inImmGen = this.immGen.getPort('input')
 		const outImmGen = this.immGen.getPort('output')
+
+		outImmGen.name = '1'
 
 		// DataGen
 		const inDataGen = this.dataGen.getPort('input')
 		const outDataGen = this.dataGen.getPort('output')
 		const inDataGenUnsigned = this.dataGen.getPort('input-Unsigned')
+
+		outDataGen.name = '8'
 
 		// ALU Control
 		const inAluCon1 = this.aluControl.getPort('input-Instruction')
@@ -171,6 +211,8 @@ export default class DefaultDatapath {
 		const outALUZero = this.alu.getPort('output-Zero')
 		const outALUSignBit = this.alu.getPort('output-SignBit')
 
+		outALUResult.name = '5'
+
 		// Dmem
 		const inDMem1 = this.dMem.getPort('input-Address')
 		const inDMem2 = this.dMem.getPort('input-WriteData')
@@ -179,48 +221,64 @@ export default class DefaultDatapath {
 		const inDmem_MemWrite = this.dMem.getPort('input-ControlMemWrite')
 		const outDmem = this.dMem.getPort('output-ReadData')
 
+		outDmem.name = '8'
+
 		// Muxs
 		const inMux0_0 = this.muxs[0].getPort('input-0')
 		const inMux0_1 = this.muxs[0].getPort('input-1')
 		const inMux0_control = this.muxs[0].getPort('input-control')
 		const outMux0 = this.muxs[0].getPort('output')
+		console.log('outMux0: ', this.muxs[0])
+
+		outMux0.name = '6'
 		const inMux1_0 = this.muxs[1].getPort('input-0')
 		const inMux1_1 = this.muxs[1].getPort('input-1')
 		const inMux1_control = this.muxs[1].getPort('input-control')
 		const outMux1 = this.muxs[1].getPort('output')
+		outMux1.name = '9'
 		const inMux2_0 = this.muxs[2].getPort('input-0')
 		const inMux2_1 = this.muxs[2].getPort('input-1')
 		const inMux2_control = this.muxs[2].getPort('input-control')
 		const outMux2 = this.muxs[2].getPort('output')
+		outMux2.name = '16'
 		const inMux3_0 = this.muxs[3].getPort('input-0')
 		const inMux3_1 = this.muxs[3].getPort('input-1')
 		const inMux3_control = this.muxs[3].getPort('input-control')
 		const outMux3 = this.muxs[3].getPort('output')
+		outMux3.name = '3'
 		const inMux4_0 = this.muxs[4].getPort('input-0')
 		const inMux4_1 = this.muxs[4].getPort('input-1')
 		const inMux4_control = this.muxs[4].getPort('input-control')
 		const outMux4 = this.muxs[4].getPort('output')
+		outMux4.name = '10'
 		const inMux5_0 = this.muxs[5].getPort('input-0')
 		const inMux5_1 = this.muxs[5].getPort('input-1')
 		const inMux5_control = this.muxs[5].getPort('input-control')
 		const outMux5 = this.muxs[5].getPort('output')
+		outMux5.name = '11'
 		const inMux6_0 = this.muxs[6].getPort('input-0')
 		const inMux6_1 = this.muxs[6].getPort('input-1')
 		const inMux6_control = this.muxs[6].getPort('input-control')
 		const outMux6 = this.muxs[6].getPort('output')
+		outMux6.name = '12'
 		const inMux7_0 = this.muxs[7].getPort('input-0')
 		const inMux7_1 = this.muxs[7].getPort('input-1')
 		const inMux7_control = this.muxs[7].getPort('input-control')
 		const outMux7 = this.muxs[7].getPort('output')
+		outMux7.name = '15'
 		const inMux8_0 = this.muxs[8].getPort('input-0')
 		const inMux8_1 = this.muxs[8].getPort('input-1')
 		const inMux8_control = this.muxs[8].getPort('input-control')
 		const outMux8 = this.muxs[8].getPort('output')
+		outMux8.name = '17'
 
 		// Constants
 		const con4 = this.constants[0].getPort('output')
 		const con0 = this.constants[2].getPort('output')
 		const con1 = this.constants[1].getPort('output')
+
+		con0.name = '13'
+		con1.name = '14'
 
 		// Branch
 		const inBraJal = this.branch.getPort('input-Jal')
@@ -235,21 +293,26 @@ export default class DefaultDatapath {
 		// ShiftLeft 12
 		const inShiftLeft12 = this.shiftLeft12.getPort('input')
 		const outShiftLeft12 = this.shiftLeft12.getPort('output')
+		outShiftLeft12.name = '1'
 
 		// ShiftLeft 1
 		const inShiftLeft1 = this.shiftLeft.getPort('input')
 		const outShiftLeft1 = this.shiftLeft.getPort('output')
+		outShiftLeft1.name = '1'
 
 		// Add
 		const inAdd0_0 = this.adds[0].getPort('input-Top')
 		const inAdd0_1 = this.adds[0].getPort('input-Bottom')
 		const outAdd0 = this.adds[0].getPort('output')
+		outAdd0.name = '0'
 		const inAdd1_0 = this.adds[1].getPort('input-Top')
 		const inAdd1_1 = this.adds[1].getPort('input-Bottom')
 		const outAdd1 = this.adds[1].getPort('output')
+		outAdd1.name = '4'
 		const inAdd2_0 = this.adds[2].getPort('input-Top')
 		const inAdd2_1 = this.adds[2].getPort('input-Bottom')
 		const outAdd2 = this.adds[2].getPort('output')
+		outAdd2.name = '7'
 
 		const pcPort1 = this.links.createPort(outPC.getXY().x + 1, outPC.getXY().y)
 		const pcPort2 = this.links.createPort(
