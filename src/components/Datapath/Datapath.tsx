@@ -31,13 +31,14 @@ function Datapath({ data, step }: DatapathProps) {
 			return
 		}
 
-		if (!data) {
+		if (!data || data.length === 0) {
 			datapathRef.current.resetState()
 			return
 		}
 
-		console.log('data: ', data);
-		
+		console.log('data: ', data)
+
+		datapathRef.current.resetState()
 		datapathRef.current.loadInstruction(data)
 	}, [data])
 

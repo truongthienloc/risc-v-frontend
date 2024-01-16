@@ -22,7 +22,9 @@ export default class VPort extends Port {
 
 	public render(dt: number): void {
 		super.render(dt)
-		this.context.fillStyle = this.active ? this.activeColor : this.options?.color ?? 'black'
+		this.context.fillStyle = this.active
+			? this.activeColor
+			: this.options?.color ?? 'black'
 		this.context.fill()
 		this.context.restore()
 	}
@@ -30,11 +32,11 @@ export default class VPort extends Port {
 	public load(data: InputData, callback?: (() => void) | undefined): void {
 		super.load(data, callback)
 		this.active = true
-		
+
 		if (!data.color) {
 			return
 		}
-		
+
 		this.activeColor = data.color
 	}
 }

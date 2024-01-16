@@ -29,11 +29,16 @@ export default class PC extends Block {
 		return super.getPort(id) as Port
 	}
 
-	public finishSignalConnect(callback: () => void): void {
+	public connectFinishSignal(callback: () => void): void {
 		this.finishSignalCallbacks.push(callback)
 	}
 
 	public load(data: InputData): void {
-		this.finishSignalCallbacks.forEach(callback => callback())
+		this.finishSignalCallbacks.forEach((callback) => callback())
+	}
+
+	public destroy(): void {
+		super.destroy()
+		this.finishSignalCallbacks = []
 	}
 }

@@ -228,7 +228,10 @@ function CodingPage() {
 			</div>
 
 			<div className='flex flex-row gap-2'>
-				<Button variant='outlined' onClick={handleRun}>
+				<Button
+					variant='outlined'
+					onClick={handleRun}
+					disabled={typeCompile === 'step'}>
 					RUN
 				</Button>
 				<Button variant='outlined' onClick={handleReset}>

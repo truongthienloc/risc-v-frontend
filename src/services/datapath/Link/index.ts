@@ -227,7 +227,9 @@ export default class Link implements IGraphObject, ILoader {
 		this.context.lineTo(x - size / 2, y + height / 2)
 		this.context.lineTo(x + size / 2, y + height / 2)
 		this.context.closePath()
-		this.context.fillStyle = this.active ? this.activeColor : this.options.color || 'black'
+		this.context.fillStyle = this.active
+			? this.activeColor
+			: this.options.color || 'black'
 		this.context.fill()
 
 		this.context.resetTransform()

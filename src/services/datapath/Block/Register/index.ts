@@ -66,7 +66,7 @@ export default class Register extends Block {
 		return super.getPort(id) as Port
 	}
 
-	public finishSignalConnect(callback: () => void): void {
+	public connectFinishSignal(callback: () => void): void {
 		this.finishSignalCallbacks.push(callback)
 	}
 
@@ -74,7 +74,7 @@ export default class Register extends Block {
 		const portName = data.srcId
 
 		if (this.inputs.has(portName)) {
-			return 
+			return
 		}
 
 		this.inputs.set(portName, data)
@@ -84,11 +84,15 @@ export default class Register extends Block {
 			for (const [, output] of outputs) {
 				output.load(data)
 			}
-		}
-		else if (this.inputs.size === 5) {
+		} else if (this.inputs.size === 5) {
 			// Finish
 			this.inputs.clear()
-			this.finishSignalCallbacks.forEach(callback => callback())
+			this.finishSignalCallbacks.forEach((callback) => callback())
 		}
+	}
+
+	public destroy(): void {
+		super.destroy()
+		this.finishSignalCallbacks = []
 	}
 }

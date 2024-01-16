@@ -217,7 +217,7 @@ export default class Scene {
 
 	public stop(): void {
 		if (!this.running) {
-			return 
+			return
 		}
 
 		this.running = false

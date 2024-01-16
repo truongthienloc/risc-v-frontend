@@ -68,6 +68,22 @@ function SchematicViewPage() {
 			} catch (error) {
 				console.error(error)
 			}
+		} else {
+			if (!assembleData || !currData) {
+				return
+			}
+
+			stepIndex.current++
+			const index = stepIndex.current
+			if (index < assembleData.length) {
+				setCurrData({
+					...currData,
+					Registers: assembleData.Registers[index].data,
+					Graphic: assembleData.Graphic[index].data,
+				})
+			} else {
+				setCurrData({ ...currData, Graphic: [] })
+			}
 		}
 	}
 
@@ -75,7 +91,7 @@ function SchematicViewPage() {
 		if (!currData || !assembleData) {
 			return -1
 		}
-		if (stepIndex.current === assembleData.length) {
+		if (stepIndex.current >= assembleData.length) {
 			return (stepIndex.current + 10) * 4
 		}
 		const pcValue =
@@ -89,7 +105,7 @@ function SchematicViewPage() {
 		<div className='w-full h-full flex-1 flex flex-col gap-4 px-4 p-1'>
 			<div className='flex flex-row gap-2'>
 				<Button variant='outlined'>
-					<Link href='/coding/schematic-view'>Schematic view</Link>
+					<Link href='/coding'>Coding</Link>
 				</Button>
 				<Button variant='outlined'>
 					<Link href='/coding/disassembly'>Disassembly</Link>
@@ -110,13 +126,17 @@ function SchematicViewPage() {
 					</div>
 				</div>
 				<div className='w-[70%] min-w-[450px] flex flex-col gap-1 border border-black rounded bg-white'>
-					<Datapath data={currData?.Graphic}/>
+					<Datapath data={currData?.Graphic} />
 				</div>
 			</div>
 
 			<div className='flex flex-row gap-2 pb-4'>
-				<Button variant='outlined'>RUN</Button>
-				<Button variant='outlined' onClick={handleReset}>RESET</Button>
+				<Button variant='outlined' disabled>
+					RUN
+				</Button>
+				<Button variant='outlined' onClick={handleReset}>
+					RESET
+				</Button>
 				<Button variant='outlined' onClick={handleStepButtonClick}>
 					STEP
 				</Button>

@@ -48,6 +48,12 @@ export default class DefaultDatapath {
 	private readonly X: number = 0
 	private readonly Y: number = 0
 
+	/**
+	 * isEnds[0]: PC
+	 * isEnds[1]: Registers
+	 */
+	private isEnds: boolean[] = [true, true]
+
 	constructor(containerId: string, width: number, height: number, bgColor?: string) {
 		this.scene = new Scene(containerId, width, height, bgColor)
 
@@ -70,11 +76,19 @@ export default class DefaultDatapath {
 	public loadInstruction(data: InputValue[]): void {
 		// const testData = [...data]
 		// testData[13] = {name: '13', value: 'brown'}
-		const loadingData = { type: 'once', srcId: this.pc.id, value: data } as InputData
+		this.isEnds[0] = false
+		this.isEnds[1] = false
+		this.pc.connectFinishSignal(this.handlePCEnd.bind(this))
+		this.register.connectFinishSignal(this.handleRegisterEnd.bind(this))
+		const loadingData = {
+			type: 'once',
+			srcId: this.pc.id,
+			value: data,
+		} as InputData
 		const startPort = this.pc.getPort('output')
 		startPort.load(loadingData)
 		for (const constant of this.constants) {
-			const port = constant.getPort("output")
+			const port = constant.getPort('output')
 			port.load(loadingData)
 		}
 		this.scene.start()
@@ -90,6 +104,22 @@ export default class DefaultDatapath {
 		this.createBlocks()
 		this.createLinks()
 		this.scene.render(0)
+		this.isEnds[0] = true
+		this.isEnds[1] = true
+	}
+
+	private handlePCEnd(): void {
+		this.isEnds[0] = true
+		if (this.isEnds[1]) {
+			this.scene.stop()
+		}
+	}
+
+	private handleRegisterEnd(): void {
+		this.isEnds[1] = true
+		if (this.isEnds[0]) {
+			this.scene.stop()
+		}
 	}
 
 	private createBlocks(): void {
