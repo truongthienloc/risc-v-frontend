@@ -50,7 +50,7 @@ function CodingPage() {
 				error: 'Biên dịch thất bại',
 			})
 			const standardData = convertPure2Standard(data)
-			console.log('standard-data: ', standardData)
+			// console.log('standard-data: ', standardData)
 
 			dispatch(assemblingActions.setAssembleData(standardData))
 			setPrevData({
@@ -228,7 +228,10 @@ function CodingPage() {
 			</div>
 
 			<div className='flex flex-row gap-2'>
-				<Button variant='outlined' onClick={handleRun}>
+				<Button
+					variant='outlined'
+					onClick={handleRun}
+					disabled={typeCompile === 'step'}>
 					RUN
 				</Button>
 				<Button variant='outlined' onClick={handleReset}>

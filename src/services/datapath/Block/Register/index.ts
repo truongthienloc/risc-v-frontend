@@ -1,5 +1,6 @@
 import Block from '..'
 import Port from '../../Port'
+import { InputData } from '../../types'
 
 type BlockPort =
 	| 'input-ReadReg-1'
@@ -11,6 +12,8 @@ type BlockPort =
 	| 'input-control-Write'
 
 export default class Register extends Block {
+	private finishSignalCallbacks: Function[] = []
+
 	constructor(context: CanvasRenderingContext2D, x: number, y: number) {
 		super(context, x, y, 8, 11, 'white')
 
@@ -61,5 +64,35 @@ export default class Register extends Block {
 
 	public getPort(id: BlockPort): Port {
 		return super.getPort(id) as Port
+	}
+
+	public connectFinishSignal(callback: () => void): void {
+		this.finishSignalCallbacks.push(callback)
+	}
+
+	public load(data: InputData): void {
+		const portName = data.srcId
+
+		if (this.inputs.has(portName)) {
+			return
+		}
+
+		this.inputs.set(portName, data)
+
+		if (this.inputs.size === 4) {
+			const outputs = this.outputs.entries()
+			for (const [, output] of outputs) {
+				output.load(data)
+			}
+		} else if (this.inputs.size === 5) {
+			// Finish
+			this.inputs.clear()
+			this.finishSignalCallbacks.forEach((callback) => callback())
+		}
+	}
+
+	public destroy(): void {
+		super.destroy()
+		this.finishSignalCallbacks = []
 	}
 }

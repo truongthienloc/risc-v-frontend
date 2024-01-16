@@ -8,7 +8,7 @@ interface DisplayStepCodeProps {
 
 export default function DisplayStepCode({ code = [], pc = -1 }: DisplayStepCodeProps) {
 	// console.log('length: ', code.length);
-	// console.log('pc: ', pc);
+	console.log('pc: ', pc)
 
 	return (
 		<div className='flex-1 min-w-[250px] max-h-[450px] text-base flex flex-col overflow-auto py-2 px-4 gap-2 font-mono'>
