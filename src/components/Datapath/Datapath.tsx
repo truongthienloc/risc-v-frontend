@@ -1,7 +1,13 @@
 import { useEffect, useRef } from 'react'
+import { IData } from '~/interfaces/data'
 import { DefaultDatapath, Scene } from '~/services/datapath'
 
-function Datapath() {
+interface DatapathProps {
+	data?: IData[]
+	step?: string
+}
+
+function Datapath({ data, step }: DatapathProps) {
 	const datapathRef = useRef<DefaultDatapath>()
 	const isStart = useRef<boolean>(false)
 
@@ -19,6 +25,22 @@ function Datapath() {
 		isStart.current = true
 		createDatapath()
 	}, [])
+
+	useEffect(() => {
+		if (!datapathRef.current) {
+			return
+		}
+
+		if (!data || data.length === 0) {
+			datapathRef.current.resetState()
+			return
+		}
+
+		console.log('data: ', data)
+
+		datapathRef.current.resetState()
+		datapathRef.current.loadInstruction(data)
+	}, [data])
 
 	return (
 		<div

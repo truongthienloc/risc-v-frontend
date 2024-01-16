@@ -1,7 +1,7 @@
 import short from 'short-uuid'
 import Scene from '../Scene'
 import { Vector } from '../Helpers'
-import { IGraphObject, Point } from '../types'
+import { IGraphObject, InputData, Point } from '../types'
 
 export interface LineSegmentOptions {
 	color?: string
@@ -17,6 +17,7 @@ export default class LineSegment implements IGraphObject {
 	private context: CanvasRenderingContext2D
 	private options?: LineSegmentOptions
 
+	private activeColor: string = 'red'
 	private loadingLength: number = 0
 	private loadingSpeed: number = 0.01
 	private isLoading: boolean = false
@@ -94,7 +95,7 @@ export default class LineSegment implements IGraphObject {
 		this.context.beginPath()
 		this.context.moveTo(fx, fy)
 		this.context.lineTo(fx + vector.x, fy + vector.y)
-		this.context.strokeStyle = 'red'
+		this.context.strokeStyle = this.activeColor
 		this.context.lineWidth = 2
 		this.context.stroke()
 		this.context.closePath()
@@ -107,7 +108,10 @@ export default class LineSegment implements IGraphObject {
 		return Math.sqrt((lx - fx) ** 2 + (ly - fy) ** 2)
 	}
 
-	public load(finish: () => void): void {
+	public load(data: InputData, finish: () => void): void {
+		if (data.color) {
+			this.activeColor = data.color
+		}
 		this.isLoading = true
 		this.loadingLength = 0
 		this.finish = finish

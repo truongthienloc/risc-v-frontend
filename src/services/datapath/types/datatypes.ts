@@ -6,8 +6,11 @@ export type Point = {
 export type PortType = 'input' | 'output'
 export type SceneMode = 'normal' | 'grid'
 
+export type InputValue = { name: string; value: string }
 export interface InputData {
 	type: 'always' | 'once'
-	value: any
+	value: InputValue[]
 	srcId: string
+	srcName?: string
+	color?: string
 }

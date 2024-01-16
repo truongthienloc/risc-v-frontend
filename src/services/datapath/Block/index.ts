@@ -17,9 +17,9 @@ export default class Block implements IGraphObject, ILoader {
 	protected enableRenderDefault: boolean = true
 
 	private ports: Map<string, Port> = new Map()
-	private inputs: Map<string, InputData> = new Map()
+	protected inputs: Map<string, InputData> = new Map()
 	private countInputPorts: number = 0
-	private outputs: Map<string, Port> = new Map()
+	protected outputs: Map<string, Port> = new Map()
 
 	constructor(
 		context: CanvasRenderingContext2D,
@@ -69,7 +69,18 @@ export default class Block implements IGraphObject, ILoader {
 		}
 	}
 
-	public destroy(): void {}
+	public destroy(): void {
+		for (const [, port] of this.ports.entries()) {
+			port.destroy()
+		}
+		for (const [, output] of this.outputs.entries()) {
+			output.destroy()
+		}
+
+		this.ports.clear()
+		this.outputs.clear()
+		this.inputs.clear()
+	}
 
 	public load(
 		{ type = 'once', srcId, value }: InputData,
@@ -96,9 +107,10 @@ export default class Block implements IGraphObject, ILoader {
 		yt: number,
 		type: PortType,
 		color?: string,
+		id?: string,
 		name?: string
 	): Port {
-		const _port = new Port(this.context, this.x + xt, this.y + yt, color, name)
+		const _port = new Port(this.context, this.x + xt, this.y + yt, color, id, name)
 		this.ports.set(_port.id, _port)
 		if (type === 'input') {
 			this.countInputPorts++
