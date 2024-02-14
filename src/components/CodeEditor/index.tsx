@@ -79,11 +79,11 @@ function CodeEditor({ value = '', onChange, disable = false }: CodeEditorProps) 
 		}
 	}, [disable])
 
-	// useEffect(() => {
-	// 	if (codeRef.current) {
-	// 		codeRef.current.setValue(value)
-	// 	}
-	// }, [value])
+	useEffect(() => {
+		if (codeRef.current) {
+			codeRef.current.setValue(value)
+		}
+	}, [value])
 
 	return (
 		<div

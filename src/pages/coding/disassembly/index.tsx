@@ -40,6 +40,10 @@ function DisassemblyPage() {
 		}
 	}
 
+	const handleCopyClick = () => {
+		navigator.clipboard.writeText(result)
+	}
+
 	return (
 		<div className='w-full h-full flex-1 flex flex-col gap-4 px-4 p-1'>
 			<div className='flex flex-row gap-2'>
@@ -76,7 +80,8 @@ function DisassemblyPage() {
 						<h2 className='text-xl text-left'>Your code:</h2>
 						<Button
 							className='border border-black px-3 py-1 rounded'
-							variant='outlined'>
+							variant='outlined'
+							onClick={handleCopyClick}>
 							Copy
 						</Button>
 					</div>

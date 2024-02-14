@@ -197,7 +197,7 @@ function CodingPage() {
 					<Tabs value={tabIndex} onChange={handleChangeTabIndex}>
 						<Tab label='REGISTERS' {...createProps(0)} />
 						<Tab label='DATA MEMORY' {...createProps(1)} />
-						<Tab label='INSTRUCTIONS MEM' {...createProps(2)} />
+						<Tab label='INSTRUCTIONS MEMORY' {...createProps(2)} />
 					</Tabs>
 
 					<TabPanel index={0} value={tabIndex}>
