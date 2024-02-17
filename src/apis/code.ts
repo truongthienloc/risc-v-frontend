@@ -16,6 +16,19 @@ export const runCode = (code: string) => {
 	})
 }
 
+export const runCodeForPipeline = (code: string) => {
+	return new Promise<IPureAssembleData>(async (resolve, rejects) => {
+		try {
+			const res = await client.post(apisConfig.pipeline, { code: code})
+			const data = res.data as IPureAssembleData
+			console.log('Data: ', data);
+			resolve(data)
+		} catch (error) {
+			rejects(error)
+		}
+	})
+}
+
 export const disassemble = (code: string) => {
 	return new Promise<string[]>(async (resolve, reject) => {
 		try {

@@ -108,6 +108,9 @@ function SchematicViewPage() {
 					<Link href='/coding'>Coding</Link>
 				</Button>
 				<Button variant='outlined'>
+					<Link href='/coding/pipeline'>Pipeline</Link>
+				</Button>
+				<Button variant='outlined'>
 					<Link href='/coding/disassembly'>Disassembly</Link>
 				</Button>
 			</div>
