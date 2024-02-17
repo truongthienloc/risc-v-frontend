@@ -176,6 +176,9 @@ function CodingPage() {
 					<Link href='/coding/schematic-view'>Schematic view</Link>
 				</Button>
 				<Button variant='outlined'>
+					<Link href='/coding/pipeline'>Pipeline</Link>
+				</Button>
+				<Button variant='outlined'>
 					<Link href='/coding/disassembly'>Disassembly</Link>
 				</Button>
 			</div>
