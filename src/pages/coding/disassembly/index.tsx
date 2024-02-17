@@ -53,6 +53,9 @@ function DisassemblyPage() {
 				<Button variant='outlined'>
 					<Link href='/coding/schematic-view'>Schematic view</Link>
 				</Button>
+				<Button variant='outlined'>
+					<Link href='/coding/pipeline'>Pipeline</Link>
+				</Button>
 			</div>
 
 			<div className='flex-1 flex flex-row gap-2'>
