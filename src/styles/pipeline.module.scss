@@ -1,0 +1,7 @@
+.pipeline-note {
+	&:hover {
+		.pipeline-note__item {
+			display: block;
+		}
+	}
+}

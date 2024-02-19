@@ -80,7 +80,7 @@ function CodeEditor({ value = '', onChange, disable = false }: CodeEditorProps) 
 	}, [disable])
 
 	useEffect(() => {
-		if (codeRef.current) {
+		if (codeRef.current && disable) {
 			codeRef.current.setValue(value)
 		}
 	}, [value])

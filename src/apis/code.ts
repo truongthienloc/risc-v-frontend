@@ -1,6 +1,7 @@
 import client from '~/services/axios'
 import apisConfig from '~/configs/apis.json'
 import { IPureAssembleData } from '~/interfaces/data2'
+import { PipelinePureData } from '~/interfaces/pipeline'
 
 export const runCode = (code: string) => {
 	return new Promise<IPureAssembleData>(async (resolve, rejects) => {
@@ -17,11 +18,11 @@ export const runCode = (code: string) => {
 }
 
 export const runCodeForPipeline = (code: string) => {
-	return new Promise<IPureAssembleData>(async (resolve, rejects) => {
+	return new Promise<PipelinePureData>(async (resolve, rejects) => {
 		try {
-			const res = await client.post(apisConfig.pipeline, { code: code})
-			const data = res.data as IPureAssembleData
-			console.log('Data: ', data);
+			const res = await client.post(apisConfig.pipeline, { code: code })
+			const data = res.data as PipelinePureData
+			console.log('Data: ', data)
 			resolve(data)
 		} catch (error) {
 			rejects(error)
