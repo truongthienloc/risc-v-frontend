@@ -9,20 +9,41 @@ import { Datapath, Pipeline } from '~/components/Datapath'
 import { toast } from 'react-toastify'
 import * as codeAPI from '~/apis/code'
 import { convertPure2Standard } from '~/helpers/assembleDataFormatter'
-import { IAssembleData } from '~/interfaces/data'
 import { assemblingActions } from '~/services/redux/assembling/assemblingSlice'
-import { assembleDataSelector } from '~/services/redux/assembling/assemblingSelector'
 import { DisplayStepCode } from '~/components/DisplayStepCode'
+import {
+	convert5Sections2IDataArray,
+	convertPipelinePure2Standard,
+} from '~/helpers/pipelineFormatter'
+import {
+	FiveSections,
+	SingleStandardPipeline,
+	StandardPipelineData,
+} from '~/interfaces/pipeline'
+import { IData } from '~/interfaces/data'
+import { pushFiveSections } from '~/helpers/pipelineQueue'
+import DisplayStepPipeline, {
+	PCSteps,
+} from '~/components/DisplayStepCode/DisplayStepPipeline'
+import { PipelineNote } from '~/components/Note'
 
 function PipelinePage() {
 	const code = useSelector(codeSelector)
-	const assembleData = useSelector(assembleDataSelector)
+	const [assembleData, setAssembleData] = useState<StandardPipelineData>([])
+	// const assembleData = useSelector(assembleDataSelector)
 	const dispatch = useDispatch()
 	const handleChangeCode = (value: string) => dispatch(codingActions.setCode(value))
 	const [isCompile, setIsCompile] = useState(false)
-	const [currData, setCurrData] = useState<IAssembleData | null>(null)
+	const [currData, setCurrData] = useState<IData[] | null>(null)
 	const stepIndex = useRef(-1)
 	const [stepCode, setStepCode] = useState<string[]>([])
+	const [stepQueue, setStepQueue] = useState<FiveSections>([
+		null,
+		null,
+		null,
+		null,
+		null,
+	])
 
 	const handleReset = () => {
 		dispatch(assemblingActions.setAssembleData(null))
@@ -31,15 +52,17 @@ function PipelinePage() {
 	}
 
 	const handleStepCompiling = async () => {
-		const data = await codeAPI.runCodeForPipeline(code)
+		const data = await codeAPI.runCode(code)
+		const pipelineData = await codeAPI.runCodeForPipeline(code)
 		const standardData = convertPure2Standard(data)
+		const standardPipelineData = convertPipelinePure2Standard(pipelineData)
 		const binaryCode = standardData.Instruction_memory.map(
 			(value) => value.value
 		).join('\n')
 
 		const disData = await codeAPI.disassemble(binaryCode)
 
-		return { standardData, disData }
+		return { standardPipelineData, disData }
 	}
 
 	const handleStepButtonClick = async () => {
@@ -51,20 +74,23 @@ function PipelinePage() {
 					error: 'Biên dịch thất bại',
 				})
 
-				const { standardData, disData } = data
+				const { standardPipelineData, disData } = data
 
-				dispatch(assemblingActions.setAssembleData(standardData))
+				setAssembleData(standardPipelineData)
 
 				setStepCode(disData)
 				stepIndex.current = 0
 				setIsCompile(true)
-
-				setCurrData({
-					Registers: standardData.Registers[0].data,
-					Data_memory: [],
-					Instruction_memory: standardData.Instruction_memory,
-					Graphic: standardData.Graphic[0].data,
-				})
+				const fiveSections: FiveSections = [
+					standardPipelineData[0],
+					null,
+					null,
+					null,
+					null,
+				]
+				const iData = convert5Sections2IDataArray(fiveSections)
+				setCurrData(iData)
+				setStepQueue(fiveSections)
 			} catch (error) {
 				console.error(error)
 			}
@@ -76,30 +102,38 @@ function PipelinePage() {
 			stepIndex.current++
 			const index = stepIndex.current
 			if (index < assembleData.length) {
-				setCurrData({
-					...currData,
-					Registers: assembleData.Registers[index].data,
-					Graphic: assembleData.Graphic[index].data,
-				})
+				const nextSection = assembleData[index].blocking
+					? null
+					: assembleData[index]
+				const fiveSections = pushFiveSections(stepQueue, nextSection)
+
+				setStepQueue(fiveSections)
+				setCurrData(convert5Sections2IDataArray(fiveSections))
 			} else {
-				setCurrData({ ...currData, Graphic: [] })
+				// Queue is empty => End of steps
+				const fiveSections = pushFiveSections(stepQueue, null)
+				if (fiveSections.some((value) => value !== null)) {
+					setStepQueue(fiveSections)
+					setCurrData(convert5Sections2IDataArray(fiveSections))
+				} else {
+					setCurrData(null)
+				}
 			}
 		}
 	}
 
-	const pc = useMemo(() => {
-		if (!currData || !assembleData) {
-			return -1
-		}
-		if (stepIndex.current >= assembleData.length) {
-			return (stepIndex.current + 10) * 4
-		}
-		const pcValue =
-			currData.Registers.find((value) => value.register1.name.includes('pc'))
-				?.register1.value || '0x00000'
+	const { pc, isEnd } = useMemo(() => {
+		console.log('currData: ', currData)
 
-		return parseInt(pcValue, 16)
-	}, [currData, stepIndex.current])
+		if (!currData || !assembleData) {
+			const fiveSections = [null, null, null, null, null] as PCSteps
+			return { pc: fiveSections, isEnd: true }
+		}
+
+		const pcValue = stepQueue.map((step) => step && step.pc)
+
+		return { pc: pcValue as PCSteps, isEnd: false }
+	}, [currData, stepIndex.current, stepQueue])
 
 	return (
 		<div className='w-full h-full flex-1 flex flex-col gap-4 px-4 p-1'>
@@ -107,7 +141,7 @@ function PipelinePage() {
 				<Button variant='outlined'>
 					<Link href='/coding'>Coding</Link>
 				</Button>
-                <Button variant='outlined'>
+				<Button variant='outlined'>
 					<Link href='/coding/schematic-view'>Schematic view</Link>
 				</Button>
 				<Button variant='outlined'>
@@ -117,19 +151,24 @@ function PipelinePage() {
 
 			<div className='flex-1 flex flex-row gap-2'>
 				<div className='w-[30%] min-w-[250px] flex flex-col'>
-					<div className='flex flex-col p-4 j'>
+					<div className='flex flex-row px-4 py-2 justify-between'>
 						<h2 className='text-xl text-left'>Input your code here:</h2>
+						<PipelineNote />
 					</div>
 					<div className='flex flex-col h-full border border-black'>
 						{isCompile === false ? (
 							<CodeEditor value={code} onChange={handleChangeCode} />
 						) : (
-							<DisplayStepCode code={stepCode} pc={pc} />
+							<DisplayStepPipeline
+								code={stepCode}
+								pc={pc}
+								isEnd={isEnd}
+							/>
 						)}
 					</div>
 				</div>
 				<div className='w-[70%] min-w-[450px] flex flex-col gap-1 border border-black rounded bg-white'>
-					<Pipeline data={currData?.Graphic} />
+					<Pipeline data={currData} />
 				</div>
 			</div>
 

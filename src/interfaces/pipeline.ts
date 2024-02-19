@@ -185,3 +185,11 @@ export type SingleStandardPipeline = {
 }
 
 export type StandardPipelineData = SingleStandardPipeline[]
+
+export type FiveSections = [
+	SingleStandardPipeline | null,
+	SingleStandardPipeline | null,
+	SingleStandardPipeline | null,
+	SingleStandardPipeline | null,
+	SingleStandardPipeline | null,
+]
