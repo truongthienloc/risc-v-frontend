@@ -23,6 +23,7 @@ function DisassemblyPage() {
 		const preFormattedText = formattedText.split(/\s+/).join('\n')
 
 		setCode(preFormattedText)
+		// setCode(inputValue)
 	}
 
 	const handleDisassembleClick = async () => {

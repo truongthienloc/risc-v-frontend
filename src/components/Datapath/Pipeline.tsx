@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react'
 import { IData } from '~/interfaces/data'
-import { PipelineDatapath, DefaultDatapath, Scene } from '~/services/datapath'
+import { PipelineDatapath } from '~/services/datapath'
 
 interface PipelineProps {
-	data?: IData[]
+	data?: IData[] | null
 	step?: string
 }
 
@@ -13,9 +13,7 @@ function Pipeline({ data, step }: PipelineProps) {
 
 	const createDatapath = () => {
 		const datapathDiv = document.querySelector('#datapath') as HTMLDivElement
-		const width = datapathDiv.clientWidth / Scene.CELL
-		const height = Math.max(datapathDiv.clientHeight / Scene.CELL, 54)
-		datapathRef.current = new PipelineDatapath('datapath', width, height)
+		datapathRef.current = new PipelineDatapath('datapath')
 	}
 
 	useEffect(() => {

@@ -4,120 +4,123 @@ import { Vector } from '../Helpers'
 import { IGraphObject, InputData, Point } from '../types'
 
 export interface LineSegmentOptions {
-    color?: string
-    width?: number
+	color?: string
+	width?: number
+	speed?: number
 }
 
 export default class LineSegment implements IGraphObject {
-    private _id: string
-    private fx: number
-    private fy: number
-    private lx: number
-    private ly: number
-    private context: CanvasRenderingContext2D
-    private options?: LineSegmentOptions
+	private _id: string
+	private fx: number
+	private fy: number
+	private lx: number
+	private ly: number
+	private context: CanvasRenderingContext2D
+	private options?: LineSegmentOptions
 
-    private activeColor: string = 'red'
-    private loadingLength: number = 0
-    private loadingSpeed: number = 0.01
-    private isLoading: boolean = false
-    private finish?: () => void
+	private activeColor: string = 'red'
+	private loadingLength: number = 0
+	private loadingSpeed: number = 0.01
+	private isLoading: boolean = false
+	private finish?: () => void
 
-    public index: number
+	public index: number
 
-    constructor(
-        context: CanvasRenderingContext2D,
-        fx: number,
-        fy: number,
-        lx: number,
-        ly: number,
-        index: number = -1,
-        options?: LineSegmentOptions,
-    ) {
-        this._id = short.generate()
-        this.fx = fx
-        this.fy = fy
-        this.lx = lx
-        this.ly = ly
-        this.index = index
-        this.options = options
+	constructor(
+		context: CanvasRenderingContext2D,
+		fx: number,
+		fy: number,
+		lx: number,
+		ly: number,
+		index: number = -1,
+		options?: LineSegmentOptions
+	) {
+		this._id = short.generate()
+		this.fx = fx
+		this.fy = fy
+		this.lx = lx
+		this.ly = ly
+		this.index = index
+		this.options = options
 
-        this.context = context
+		this.loadingSpeed = options?.speed || 0.02
 
-        this.render(0)
-    }
+		this.context = context
 
-    get id(): string {
-        return this._id
-    }
+		this.render(0)
+	}
 
-    get sPoint(): Point {
-        return { x: this.fx, y: this.fy }
-    }
+	get id(): string {
+		return this._id
+	}
 
-    get dPoint(): Point {
-        return { x: this.lx, y: this.ly }
-    }
+	get sPoint(): Point {
+		return { x: this.fx, y: this.fy }
+	}
 
-    public destroy(): void {}
+	get dPoint(): Point {
+		return { x: this.lx, y: this.ly }
+	}
 
-    public render(dt: number): void {
-        const fx = this.fx * Scene.CELL
-        const fy = this.fy * Scene.CELL
-        const lx = this.lx * Scene.CELL
-        const ly = this.ly * Scene.CELL
+	public destroy(): void {}
 
-        // Base render
-        this.context.beginPath()
-        this.context.moveTo(fx, fy)
-        this.context.lineTo(lx, ly)
-        this.context.strokeStyle = this.options?.color ?? 'black'
-        this.context.lineWidth = this.options?.width ?? 2
-        this.context.stroke()
-        this.context.closePath()
+	public render(dt: number): void {
+		const fx = this.fx * Scene.CELL
+		const fy = this.fy * Scene.CELL
+		const lx = this.lx * Scene.CELL
+		const ly = this.ly * Scene.CELL
 
-        // Loading render
-        if (this.isLoading) {
-            const v = this.loadingSpeed / 1000
-            const ds = v * dt
+		// Base render
+		this.context.beginPath()
+		this.context.moveTo(fx, fy)
+		this.context.lineTo(lx, ly)
+		this.context.strokeStyle = this.options?.color ?? 'black'
+		this.context.lineWidth = this.options?.width ?? 2
+		this.context.stroke()
+		this.context.closePath()
 
-            this.loadingLength = Math.min(this.loadingLength + ds, this.getLength())
+		// Loading render
+		if (this.isLoading) {
+			const v = this.loadingSpeed / 1000
+			const ds = v * dt
 
-            if (this.loadingLength === this.getLength()) {
-                this.isLoading = false
-                this.finish?.()
-            }
-        }
+			this.loadingLength = Math.min(this.loadingLength + ds, this.getLength())
 
-        const loadingLength = this.loadingLength * Scene.CELL
+			if (this.loadingLength === this.getLength()) {
+				this.isLoading = false
+				this.finish?.()
+			}
+		}
 
-        const vector = Vector.fromXY(fx, fy, lx, ly).normalize().multiply(loadingLength)
-        this.context.beginPath()
-        this.context.moveTo(fx, fy)
-        this.context.lineTo(fx + vector.x, fy + vector.y)
-        this.context.strokeStyle = this.activeColor
-        this.context.lineWidth = 2
-        this.context.stroke()
-        this.context.closePath()
+		const loadingLength = this.loadingLength * Scene.CELL
 
-        this.context.restore()
-    }
+		const vector = Vector.fromXY(fx, fy, lx, ly).normalize().multiply(loadingLength)
+		this.context.beginPath()
+		this.context.moveTo(fx, fy)
+		this.context.lineTo(fx + vector.x, fy + vector.y)
+		this.context.strokeStyle = this.activeColor
+		this.context.lineWidth = 2
+		this.context.stroke()
+		this.context.closePath()
 
-    public getLength(): number {
-        const { fx, fy, lx, ly } = this
-        return Math.sqrt((lx - fx) ** 2 + (ly - fy) ** 2)
-    }
+		this.context.restore()
+	}
 
-    public load(data: InputData, finish: () => void): void {
-        if (data.color) {
-            this.activeColor = data.color
-        }
-        this.isLoading = true
-        this.loadingLength = 0
-        this.finish = finish
-    }
+	public getLength(): number {
+		const { fx, fy, lx, ly } = this
+		return Math.sqrt((lx - fx) ** 2 + (ly - fy) ** 2)
+	}
 
-    public clearLoading(): void {
-        this.loadingLength = 0
-    }
+	public load(data: InputData, finish: () => void): void {
+		if (data.color) {
+			this.activeColor = data.color
+		}
+		this.isLoading = true
+		this.loadingLength = 0
+		this.finish = finish
+	}
+
+	public clearLoading(): void {
+		this.loadingLength = 0
+	}
 }
