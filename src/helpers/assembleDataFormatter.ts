@@ -5,6 +5,7 @@ import {
 	ISteps,
 	IStepAssembleData,
 	IInsMemory,
+	IGraphic,
 } from '~/interfaces/data2'
 
 export function convertString2IData(string: string): IData {
@@ -92,10 +93,52 @@ function convertPure2Step(pure: IRegisters): ISteps<IData[]> {
 	return stepResult
 }
 
+// Graphic should be had its handler
+function convertGraphicPure2Step(pure: IGraphic): ISteps<IData[]> {
+	const stepResult = []
+
+	for (const key in pure) {
+		if (Object.prototype.hasOwnProperty.call(pure, key)) {
+			const pureGraphic = pure[key]
+
+			const graphic = []
+			for (const key in pureGraphic) {
+				if (Object.prototype.hasOwnProperty.call(pureGraphic, key)) {
+					const element = pureGraphic[key]?.toString()
+					if (!element) {
+						continue
+					}
+
+					if (element.length === 6) {
+						graphic.push({
+							name: key,
+							value: `#${element}`,
+						})
+					} else if (element.includes('1')) {
+						graphic.push({
+							name: key,
+							value: 'blue',
+						})
+					}
+				}
+			}
+
+			stepResult.push({
+				step: key,
+				data: graphic,
+			})
+		}
+	}
+
+	return stepResult
+}
+
 export function convertPure2Standard(pure: IPureAssembleData): IStepAssembleData {
 	const stepRegisters = convertPure2Step(pure.Registers)
 	const stepDMems = convertPure2Step(pure.Data_memory)
-	const stepGraphics = convertPure2Step(pure.Graphic)
+	const stepGraphics = convertGraphicPure2Step(pure.Graphic)
+	console.log('stepGraphics', stepGraphics)
+
 	const iMems = convertPureIMem2Standard(pure.Instruction_memory)
 
 	const stepTwinRegisters = []
