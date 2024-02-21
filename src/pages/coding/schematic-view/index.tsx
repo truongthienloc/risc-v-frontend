@@ -32,6 +32,8 @@ function SchematicViewPage() {
 
 	const handleStepCompiling = async () => {
 		const data = await codeAPI.runCode(code)
+		console.log('data: ', data)
+
 		const standardData = convertPure2Standard(data)
 		const binaryCode = standardData.Instruction_memory.map(
 			(value) => value.value

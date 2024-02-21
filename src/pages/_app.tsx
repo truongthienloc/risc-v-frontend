@@ -5,14 +5,16 @@ import 'react-toastify/dist/ReactToastify.css'
 import type { AppPropsWithLayout } from '~/interfaces/app'
 import Head from 'next/head'
 import DefaultLayout from '~/layouts/DefaultLayout'
-import { ToastContainer } from 'react-toastify'
-import { useEffect } from 'react'
+import { ToastContainer, toast } from 'react-toastify'
+import { useEffect, useRef } from 'react'
 import { wrapper } from '~/services/redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { useStore, Provider } from 'react-redux'
+import client from '~/services/axios'
 
 function App({ Component, pageProps }: AppPropsWithLayout) {
 	const store: any = useStore()
+	const isStart = useRef(true)
 	// const {store, props} = wrapper.useWrappedStore(pageProps)
 	// const {} = props
 	const getLayout =
@@ -21,6 +23,15 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
 	useEffect(() => {
 		if (window) {
 			import('codemirror/addon/mode/simple')
+		}
+
+		if (isStart.current) {
+			isStart.current = false
+			toast.promise(client.get('/', { timeout: 120000 }), {
+				pending: 'Đang khởi động trình biên dịch',
+				success: 'Khởi động thành công',
+				error: 'Khởi động thất bại',
+			})
 		}
 	}, [])
 	return getLayout(
