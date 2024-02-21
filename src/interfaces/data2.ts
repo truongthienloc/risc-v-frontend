@@ -5,7 +5,7 @@ export interface IDataMemory {
 }
 
 export interface IGraphic {
-	[key: string]: { [key: string]: string }
+	[key: string]: { [key: string]: string | number | null }
 }
 
 export interface IInsMemory {

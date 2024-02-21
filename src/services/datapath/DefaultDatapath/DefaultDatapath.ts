@@ -209,19 +209,19 @@ export default class DefaultDatapath {
 		const outConALUSrc = this.control.getPort('output-ALUSrc')
 		const outConRegWrite = this.control.getPort('output-RegWrite')
 
-		outConJal.name = 'control'
-		outConJalr.name = 'control'
-		outConBranch.name = 'control'
-		outConAuipcOrLui.name = 'control'
-		outConWb.name = 'control'
-		outConSlt.name = 'control'
-		outConMemtoRegister.name = 'control'
-		outConALUOp.name = 'control'
-		outConUnsigned.name = 'control'
-		outConMemRead.name = 'control'
-		outConMemWrite.name = 'control'
-		outConALUSrc.name = 'control'
-		outConRegWrite.name = 'control'
+		outConJal.name = 'jal'
+		outConJalr.name = 'jalr'
+		outConBranch.name = 'branch'
+		outConAuipcOrLui.name = 'AuiOrLui'
+		outConWb.name = 'wb'
+		outConSlt.name = 'slt'
+		outConMemtoRegister.name = 'MemtoRegister'
+		outConALUOp.name = 'ALUOp'
+		outConUnsigned.name = 'Unsigned'
+		outConMemRead.name = 'MemRead'
+		outConMemWrite.name = 'MemWrite'
+		outConALUSrc.name = 'ALUSrc'
+		outConRegWrite.name = 'RegWrite'
 
 		// ImmGen
 		const inImmGen = this.immGen.getPort('input')
@@ -326,6 +326,10 @@ export default class DefaultDatapath {
 		const outBraPcSrc1 = this.branch.getPort('output-PcSrc1')
 		const outBraPcSrc2 = this.branch.getPort('output-PcSrc2')
 		const outBraJump = this.branch.getPort('output-Jump')
+
+		outBraPcSrc1.name = 'control'
+		outBraPcSrc2.name = 'control'
+		outBraJump.name = 'control'
 
 		// ShiftLeft 12
 		const inShiftLeft12 = this.shiftLeft12.getPort('input')
