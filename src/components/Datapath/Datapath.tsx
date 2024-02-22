@@ -13,9 +13,7 @@ function Datapath({ data, step }: DatapathProps) {
 
 	const createDatapath = () => {
 		const datapathDiv = document.querySelector('#datapath') as HTMLDivElement
-		const width = datapathDiv.clientWidth / Scene.CELL
-		const height = Math.max(datapathDiv.clientHeight / Scene.CELL, 54)
-		datapathRef.current = new DefaultDatapath('datapath', width, height)
+		datapathRef.current = new DefaultDatapath('datapath', 81, 54)
 	}
 
 	useEffect(() => {
