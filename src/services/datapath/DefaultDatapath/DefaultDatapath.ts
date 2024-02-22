@@ -250,6 +250,8 @@ export default class DefaultDatapath {
 		const outALUSignBit = this.alu.getPort('output-SignBit')
 
 		outALUResult.name = '5'
+		outALUZero.name = 'zero'
+		outALUSignBit.name = 'sign-bit'
 
 		// Dmem
 		const inDMem1 = this.dMem.getPort('input-Address')
@@ -327,9 +329,9 @@ export default class DefaultDatapath {
 		const outBraPcSrc2 = this.branch.getPort('output-PcSrc2')
 		const outBraJump = this.branch.getPort('output-Jump')
 
-		outBraPcSrc1.name = 'control'
-		outBraPcSrc2.name = 'control'
-		outBraJump.name = 'control'
+		outBraPcSrc1.name = 'PcSrc1'
+		outBraPcSrc2.name = 'PcSrc2'
+		outBraJump.name = 'Jump'
 
 		// ShiftLeft 12
 		const inShiftLeft12 = this.shiftLeft12.getPort('input')

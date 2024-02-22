@@ -37,6 +37,7 @@ function PipelinePage() {
 	const [currData, setCurrData] = useState<IData[] | null>(null)
 	const stepIndex = useRef(-1)
 	const [stepCode, setStepCode] = useState<string[]>([])
+	// The queue includes: PC | IF | REG | EX | WB
 	const [stepQueue, setStepQueue] = useState<FiveSections>([
 		null,
 		null,
@@ -102,9 +103,7 @@ function PipelinePage() {
 			stepIndex.current++
 			const index = stepIndex.current
 			if (index < assembleData.length) {
-				const nextSection = assembleData[index].blocking
-					? null
-					: assembleData[index]
+				const nextSection = assembleData[index]
 				const fiveSections = pushFiveSections(stepQueue, nextSection)
 
 				setStepQueue(fiveSections)
@@ -123,14 +122,26 @@ function PipelinePage() {
 	}
 
 	const { pc, isEnd } = useMemo(() => {
-		console.log('currData: ', currData)
+		// console.log('currData: ', currData)
 
 		if (!currData || !assembleData) {
 			const fiveSections = [null, null, null, null, null] as PCSteps
 			return { pc: fiveSections, isEnd: true }
 		}
 
-		const pcValue = stepQueue.map((step) => step && step.pc)
+		const pcValue = stepQueue.map((step, index) => {
+			if (!step) {
+				return null
+			}
+			// Handle the case where the step is blocked
+			if (index > 0) {
+				const prevStep = stepQueue[index - 1]
+				if (prevStep && step.pc === prevStep.pc) {
+					return null
+				}
+			}
+			return step.pc
+		})
 
 		return { pc: pcValue as PCSteps, isEnd: false }
 	}, [currData, stepIndex.current, stepQueue])
