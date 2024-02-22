@@ -27,11 +27,13 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
 
 		if (isStart.current) {
 			isStart.current = false
-			toast.promise(client.get('/', { timeout: 120000 }), {
-				pending: 'Đang khởi động trình biên dịch',
-				success: 'Khởi động thành công',
-				error: 'Khởi động thất bại',
-			})
+			setTimeout(() => {
+				toast.promise(client.get('/', { timeout: 180000 }), {
+					pending: 'Đang khởi động trình biên dịch',
+					success: 'Khởi động thành công',
+					error: 'Khởi động thất bại',
+				})
+			}, 100)
 		}
 	}, [])
 	return getLayout(

@@ -13,7 +13,7 @@ export default function PipelineNote() {
 			<div className='absolute animate-ping w-6 h-6 rounded-full opacity-75 bg-gray-500'></div>
 			<div
 				className={clsx(
-					'absolute top-9 right-0 p-2 bg-slate-300 hidden',
+					'absolute top-9 right-0 p-2 bg-slate-300 rounded-sm hidden',
 					style['pipeline-note__item']
 				)}>
 				<NoteItem color='#ef5350' text='PC out' />

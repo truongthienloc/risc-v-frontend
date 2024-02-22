@@ -87,8 +87,8 @@ export default class PipelineDatapath {
 			srcId: this.pc.id,
 			value: data,
 		} as InputData
-		const startPort = this.pc.getPort('output')
-		startPort.load(loadingData)
+		// const startPort = this.pc.getPort('output')
+		// startPort.load(loadingData)
 		for (const constant of this.constants) {
 			const port = constant.getPort('output')
 			port.load(loadingData)
@@ -344,7 +344,7 @@ export default class PipelineDatapath {
 		// Control
 		const inControl = this.control.getPort('input')
 		const outControl = this.control.getPort('output')
-		outControl.name = 'REG.CONTROL'
+		outControl.name = 'control'
 
 		// ImmGen
 		const inImmGen = this.immGen.getPort('input')
