@@ -329,9 +329,9 @@ export default class DefaultDatapath {
 		const outBraPcSrc2 = this.branch.getPort('output-PcSrc2')
 		const outBraJump = this.branch.getPort('output-Jump')
 
-		outBraPcSrc1.name = 'PcSrc1'
-		outBraPcSrc2.name = 'PcSrc2'
-		outBraJump.name = 'Jump'
+		outBraPcSrc1.name = 'pcsrc1'
+		outBraPcSrc2.name = 'pcsrc2'
+		outBraJump.name = 'jump'
 
 		// ShiftLeft 12
 		const inShiftLeft12 = this.shiftLeft12.getPort('input')
