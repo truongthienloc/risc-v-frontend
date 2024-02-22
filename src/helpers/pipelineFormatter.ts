@@ -75,13 +75,24 @@ export function convertSingleStandardPipeline2IData(
 		if (Object.prototype.hasOwnProperty.call(pipeline[selector], key)) {
 			const name = `${selector}.${key}`
 
-			if (value.length === 6) {
-				result.push({ name, value: `#${value}` })
-			} else if (value.includes('1')) {
-				result.push({ name, value: 'blue' })
+			// If blocking, all control signal will be null
+			if (!pipeline.blocking) {
+				if (value.length === 6) {
+					result.push({ name, value: `#${value}` })
+				} else if (value.includes('1')) {
+					result.push({ name, value: 'blue' })
+				}
+			} else if (Number.isInteger(Number(key))) {
+				if (value.length === 6) {
+					result.push({ name, value: `#${value}` })
+				} else if (value.includes('1')) {
+					result.push({ name, value: 'blue' })
+				}
 			}
 		}
 	}
+
+	console.log('result: ', result)
 
 	return result
 }
@@ -95,19 +106,27 @@ export const convert5Sections2IDataArray = (sections: FiveSections): IData[] => 
 	const section3 = sections[3]
 	const section4 = sections[4]
 
-	if (section0 && !section0.blocking) {
+	if (section0) {
 		result = [...result, ...convertSingleStandardPipeline2IData(section0, 'IF')]
 	}
-	if (section1 && !section1.blocking) {
-		result = [...result, ...convertSingleStandardPipeline2IData(section1, 'REG')]
+	if (section1) {
+		const iDataSection1 = convertSingleStandardPipeline2IData(section1, 'REG')
+		// If blocking is in section IF, blocking wire will turn
+		if (section1.blocking) {
+			iDataSection1.push({
+				name: 'blocking',
+				value: 'blue',
+			})
+		}
+		result = [...result, ...iDataSection1]
 	}
-	if (section2 && !section2.blocking) {
+	if (section2) {
 		result = [...result, ...convertSingleStandardPipeline2IData(section2, 'EX')]
 	}
-	if (section3 && !section3.blocking) {
+	if (section3) {
 		result = [...result, ...convertSingleStandardPipeline2IData(section3, 'MEM')]
 	}
-	if (section4 && !section4.blocking) {
+	if (section4) {
 		result = [...result, ...convertSingleStandardPipeline2IData(section4, 'WB')]
 	}
 

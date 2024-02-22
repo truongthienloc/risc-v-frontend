@@ -17,7 +17,9 @@ export default class ControlledPC extends PC {
 
 	public load(data: InputData): void {
 		this.inputs.set(data.srcId, data)
-		if (this.inputs.size === this.countInputPorts) {
+		if (this.inputs.size === 1) {
+			super.loadout(data)
+		} else if (this.inputs.size === this.countInputPorts) {
 			super.load(data)
 		}
 	}
