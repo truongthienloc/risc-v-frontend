@@ -66,6 +66,7 @@ export default class PipelineDatapath {
 		this.createBlocks()
 
 		this.links = this.scene.createBranchingLink()
+		this.links.speed = 0.04
 
 		console.log('create datapath')
 
@@ -321,6 +322,7 @@ export default class PipelineDatapath {
 	}
 
 	private createLinks(): void {
+		const HIGH_SPEED = (this.links.speed * 5) / 2
 		// PC and Imem
 		const inPC = this.pc.getPort('input')
 		const outPC = this.pc.getPort('output')
@@ -443,7 +445,7 @@ export default class PipelineDatapath {
 		const inMuxSix0_5 = this.mux6s[0].getPort('input-5')
 		const inMuxSix0_control = this.mux6s[0].getPort('input-control')
 		const outMuxSix0 = this.mux6s[0].getPort('output')
-		outMuxSix0.name = 'REG.21'
+		outMuxSix0.name = 'EX.21'
 		const inMuxSix1_0 = this.mux6s[1].getPort('input-0')
 		const inMuxSix1_1 = this.mux6s[1].getPort('input-1')
 		const inMuxSix1_2 = this.mux6s[1].getPort('input-2')
@@ -452,7 +454,7 @@ export default class PipelineDatapath {
 		const inMuxSix1_5 = this.mux6s[1].getPort('input-5')
 		const inMuxSix1_control = this.mux6s[1].getPort('input-control')
 		const outMuxSix1 = this.mux6s[1].getPort('output')
-		outMuxSix1.name = 'REG.20'
+		outMuxSix1.name = 'EX.20'
 
 		// Constants
 		const con4 = this.constants[0].getPort('output')
@@ -598,11 +600,11 @@ export default class PipelineDatapath {
 				[detectionPort0.x, detectionPort0.y - 1],
 				[inMux2_control.x, detectionPort0.y - 1],
 			],
-			{ color: Scene.CONTROL_COLOR, speed: 0.05 }
+			{ color: Scene.CONTROL_COLOR, speed: HIGH_SPEED }
 		)
 		this.createLink(detectionPort0, conPC, [[conPC.x, detectionPort0.y]], {
 			color: Scene.CONTROL_COLOR,
-			speed: 0.05,
+			speed: HIGH_SPEED,
 		})
 
 		this.createLink(outBuffer0__section0__add, inBuffer1__section3__pc4)
@@ -746,7 +748,7 @@ export default class PipelineDatapath {
 				[outBranch_PcSrc2.x + 1, this.detection.y - 1],
 				[inMux1_control.x, this.detection.y - 1],
 			],
-			{ color: Scene.CONTROL_COLOR, speed: 0.05 }
+			{ color: Scene.CONTROL_COLOR, speed: HIGH_SPEED }
 		)
 		this.createLink(
 			outBranch_PcSrc1,
@@ -756,7 +758,7 @@ export default class PipelineDatapath {
 				[outBranch_PcSrc1.x + 1.5, this.detection.y - 1.5],
 				[inMux0_control.x, this.detection.y - 1.5],
 			],
-			{ color: Scene.CONTROL_COLOR, speed: 0.05 }
+			{ color: Scene.CONTROL_COLOR, speed: HIGH_SPEED }
 		)
 
 		// Create link from ImmGen
@@ -1132,7 +1134,7 @@ export default class PipelineDatapath {
 			[[wbPort0.x, inForward_control.y]],
 			{
 				color: Scene.CONTROL_COLOR,
-				speed: 0.05,
+				speed: HIGH_SPEED,
 			}
 		)
 
@@ -1193,7 +1195,7 @@ export default class PipelineDatapath {
 				[outAdd1.x + 3, this.adds[1].y - 1.5],
 				[inBranch_Bot4.x, this.adds[1].y - 1.5],
 			],
-			{ speed: 0.05 }
+			{ speed: HIGH_SPEED }
 		)
 		this.createLink(auiOrLuiPort1, inBranch_Bot5, [
 			[outAdd1.x + 3.5, auiOrLuiPort1.y],
@@ -1225,7 +1227,7 @@ export default class PipelineDatapath {
 				[outAdd1.x + 2.5, this.adds[1].y - 1],
 				[inBranch_Bot3.x, this.adds[1].y - 1],
 			],
-			{ speed: 0.05 }
+			{ speed: HIGH_SPEED }
 		)
 		const w_regPort3 = this.links.createPort(outAdd1.x + 2, pc4Port1.y + 1)
 		this.createLink(w_regPort0, w_regPort3, [[w_regPort0.x, w_regPort3.y]])
@@ -1282,7 +1284,7 @@ export default class PipelineDatapath {
 				],
 				[inReg_control.x, outBuffer3__section0__RegWrite.y - 5],
 			],
-			{ color: Scene.CONTROL_COLOR, speed: 0.05 }
+			{ color: Scene.CONTROL_COLOR, speed: HIGH_SPEED }
 		)
 		this.createLink(
 			outBuffer3__section0__Wb,
@@ -1340,7 +1342,7 @@ export default class PipelineDatapath {
 			w_regPort4,
 			inForward_w_reg2,
 			[[w_regPort4.x, inForward_w_reg2.y]],
-			{ speed: 0.05 }
+			{ speed: HIGH_SPEED }
 		)
 		this.createLink(
 			w_regPort4,
@@ -1351,7 +1353,7 @@ export default class PipelineDatapath {
 				[inReg4.x - 1, this.shiftLeft.y + this.shiftLeft.height + 2],
 				[inReg4.x - 1, inReg4.y],
 			],
-			{ speed: 0.05 }
+			{ speed: HIGH_SPEED }
 		)
 
 		const mux9Port0 = this.links.createPort(
@@ -1366,7 +1368,7 @@ export default class PipelineDatapath {
 				[outMux9.x + 1, outMux9.y],
 				[outMux9.x + 1, mux9Port0.y],
 			],
-			{ speed: 0.05 }
+			{ speed: HIGH_SPEED }
 		)
 		this.createLink(mux9Port0, mux9Port1, [], { speed: 0.03 })
 		this.createLink(mux9Port1, inMuxSix1_5)
