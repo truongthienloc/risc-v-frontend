@@ -13,6 +13,8 @@ export default class BranchingLink implements IGraphObject {
 	private VPorts: Map<string, VPort> = new Map()
 	private subLinks: Map<string, Link> = new Map()
 
+	public speed: number = 0.02
+
 	constructor(context: CanvasRenderingContext2D) {
 		// super(context, srcPort, desPorts[0]);
 		this._id = short.generate()
@@ -41,7 +43,11 @@ export default class BranchingLink implements IGraphObject {
 	}
 
 	public createLink(srcPort: Port, desPorts: Port, options?: LinkOptions): Link {
-		const _link = new Link(this.context, srcPort, desPorts, options)
+		let newOptions = { ...options }
+		if (!newOptions?.speed) {
+			newOptions = { ...newOptions, speed: this.speed }
+		}
+		const _link = new Link(this.context, srcPort, desPorts, newOptions)
 		this.subLinks.set(_link.id, _link)
 		return _link
 	}
