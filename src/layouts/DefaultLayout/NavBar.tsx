@@ -7,10 +7,10 @@ function NavBar() {
 
 	return (
 		<nav className='flex flex-row w-full p-6 shadow-lg justify-center gap-12 text-2xl font-bold'>
-			<NavItem href='/' value='Home' current={router.pathname} />
+			{/* <NavItem href='/' value='Home' current={router.pathname} /> */}
 			<NavItem href='/coding' value='Coding' current={router.pathname} />
-			<NavItem href='/about' value='About' current={router.pathname} />
-			<NavItem href='/feedback' value='Feedback' current={router.pathname} />
+			{/* <NavItem href='/about' value='About' current={router.pathname} /> */}
+			<NavItem href='https://forms.gle/yTFeKCdLuUokpAgd7' value='Feedback' current={router.pathname} target='_blank'/>
 		</nav>
 	)
 }
@@ -19,9 +19,10 @@ interface NavItemProps {
 	href: string
 	value: string
 	current?: string
+	target?: string
 }
 
-function NavItem({ href, value, current }: NavItemProps) {
+function NavItem({ href, value, current, target }: NavItemProps) {
 	return (
 		<Link
 			className={clsx('hover:text-[#1976d2]', {
@@ -30,7 +31,7 @@ function NavItem({ href, value, current }: NavItemProps) {
 					current.length > 1 &&
 					href.split('/')[1] === current.split('/')[1],
 			})}
-			href={href}>
+			href={href} target={target}>
 			{value}
 		</Link>
 	)
